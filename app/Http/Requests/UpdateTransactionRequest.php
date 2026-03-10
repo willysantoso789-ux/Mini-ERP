@@ -22,7 +22,11 @@ class UpdateTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'type' => 'required|in:income,expense',
+            'transaction_date' => 'required|date',
         ];
     }
 }

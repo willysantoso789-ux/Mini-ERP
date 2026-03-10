@@ -20,9 +20,9 @@
             <nav class="flex-1 px-4 space-y-2">
                 <a href="{{ route('dashboard') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Dashboard</a>
-                <a href="{{ route('transactions') }}"
+                <a href="{{ route('transactions.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Transactions</a>
-                <a href="{{ route('categories') }}"
+                <a href="{{ route('categories.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Categories</a>
             </nav>
         </aside>

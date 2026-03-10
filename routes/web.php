@@ -17,3 +17,6 @@ Route::get('/Transaksi', function () {
 Route::get('/Kategori', function () {
     return view('categories');
 })->name('categories');
+
+Route::resource('transactions', \App\Http\Controllers\TransactionController::class);
+Route::resource('categories', \App\Http\Controllers\CategoryController::class);

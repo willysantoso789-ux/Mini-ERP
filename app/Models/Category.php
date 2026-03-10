@@ -6,21 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Transaction extends Model
+class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\TransactionFactory> */
+    /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'category_id',
-        'description',
-        'amount',
+        'name',
         'type',
-        'transaction_date',
     ];
 
-    public function category()
+    public function transactions()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(Transaction::class);
     }
 }
