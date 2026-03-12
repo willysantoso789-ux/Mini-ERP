@@ -1,14 +1,11 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('dashboard');
-});
 
-Route::get('/Halaman-Utama', function () {
-    return view('dashboard');
-})->name('dashboard');
+
+Route::get('/Halaman-Utama', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/Transaksi', function () {
     return view('transactions');
@@ -17,3 +14,5 @@ Route::get('/Transaksi', function () {
 Route::get('/Kategori', function () {
     return view('categories');
 })->name('categories');
+
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

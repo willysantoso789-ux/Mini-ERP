@@ -15,7 +15,7 @@
         <div class="bg-white p-6 rounded-lg shadow">
             <i class="bg-gray-200 p-3 rounded-full fas fa-wallet text-blue-500 text-2xl mb-2"></i>
             <h3 class="text-gray-500">BALANCE</h3>
-            <p class="text-blue-500 text-2xl font-bold mt-2">10.000.000</p>
+            <p class="text-blue-500 text-2xl font-bold mt-2">Rp {{ number_format($total_saldo, 0, ',', '.') }}</p>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow">
@@ -26,7 +26,7 @@
 
         <div class="bg-white p-6 rounded-lg shadow">
             <i class="bg-gray-200 p-3 rounded-full fas fa-shopping-cart text-red-500 text-2xl mb-2"></i>
-            <h3 class="text-red-500">OUTCOME</h3>
+            <h3 class="text-red-500">EXPENSES</h3>
             <p class="text-red-500 text-2xl font-bold mt-2">10.000.000</p>
         </div>
     </div>
@@ -47,7 +47,7 @@
                     <tr>
                         <td class="border-b py-2">2024-06-01</td>
                         <td class="border-b py-2">Gaji Bulanan</td>
-                        <td class="border-b py-2 text-green-500">+10.000.000</td>
+                        <td class="border-b py-2"><span class="text-green-500">+10.000.000</span></td>
                         <td class="border-b py-2">Income</td>
                     </tr>
                     <tr>
