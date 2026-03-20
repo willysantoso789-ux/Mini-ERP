@@ -13,7 +13,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest()->paginate(10);
+        $categories = Category::orderByRaw("
+        CASE 
+            WHEN type = 'income' THEN 1
+            WHEN type = 'expense' THEN 2
+        END
+        ")->get();
+        
         return view('categories', compact('categories'));
     }
 
@@ -22,7 +28,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('addcategory');
+        $icons = ['🍔','🍕','☕','🚗','🛵','🏠','💡','🛍','🎮','🎬','💰','💵'];
+        return view('addcategory', compact('icons'));
     }
 
     /**
@@ -64,6 +71,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

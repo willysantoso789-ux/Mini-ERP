@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->enum('type',['income','expense']);
+            $table->string('icon')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

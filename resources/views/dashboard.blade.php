@@ -71,13 +71,13 @@
                     <tr>
                         <td class="border-b py-2">2024-06-01</td>
                         <td class="border-b py-2">Gaji Bulanan</td>
-                        <td class="border-b py-2 text-green-500">+10.000.000</td>
+                        <td class="border-b py-2 "><span class="text-green-500">+10.000.000</span></td>
                         <td class="border-b py-2">Income</td>
                     </tr>
                     <tr>
                         <td class="border-b py-2">2024-06-02</td>
                         <td class="border-b py-2">Belanja Bulanan</td>
-                        <td class="border-b py-2 text-red-500">-1.000.000</td>
+                        <td class="border-b py-2 "><span class="text-red-500">-1.000.000</span></td>
                         <td class="border-b py-2">Expense</td>
                     </tr>
                     <!-- More transactions can be added here -->
