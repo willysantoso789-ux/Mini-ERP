@@ -63,7 +63,9 @@
                             Edit
                         </a>
 
-                        <form method="POST" action="{{ route('categories.destroy', $cat->id) }}">
+                        <form method="POST" action="{{ route('categories.destroy', $cat->id) }}"
+                            onsubmit="return confirm('Are you sure you want to delete this category?');">
+                            
                             @csrf
                             @method('DELETE')
 

@@ -20,7 +20,7 @@ class CategoryController extends Controller
         END
         ")->get();
         
-        return view('categories', compact('categories'));
+        return view('category.index', compact('categories'));
     }
 
     /**
@@ -28,8 +28,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $icons = ['🍔','🍕','☕','🚗','🛵','🏠','💡','🛍','🎮','🎬','💰','💵'];
-        return view('addcategory', compact('icons'));
+        $icons = ['🍔','🚗','🏠','💡','🛍','🎮','💰','📈'];
+        return view('category.create', compact('icons'));
     }
 
     /**
@@ -55,7 +55,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $icons = ['🍔','🚗','🏠','💡','🛍','🎮','💰','📈'];
+        return view('category.edit', compact('category','icons')); 
     }
 
     /**
@@ -63,7 +64,9 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $category->update($request->validated());
+
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
 
     /**

@@ -36,17 +36,21 @@ class TransactionController extends Controller
 
         $categories = Category::all();
 
-        return view('transactions', compact('transactions','categories'));
+        return view('transaction.index', compact('transactions','categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $categories = Category::all();
+        $type = $request->type; // income / expense
+
+        $categories = Category::when($type, function($query) use ($type){
+            $query->where('type', $type);
+        })->get();
         
-        return view('addtransaction', compact('categories'));
+        return view('transaction.create', compact('categories','type'));
     }
 
     /**
@@ -54,8 +58,10 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        Transaction::create($request->validated());
-
+        $data = $request->validated();
+        $category = Category::findOrFail($data['category_id']);
+        $data['type'] = $category->type;
+        Transaction::create($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
     }
 

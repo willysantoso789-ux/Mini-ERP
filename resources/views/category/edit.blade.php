@@ -1,24 +1,26 @@
 @extends('layout.app')
 
-@section('title', 'Add Category')
+@section('title', 'Edit Category')
 
 @section('content')
     <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
 
-        <h2 class="text-xl font-semibold mb-4">Add Category</h2>
+        <h2 class="text-xl font-semibold mb-4">Edit Category</h2>
 
-        <form action="{{ route('categories.store') }}" method="POST">
+        <form action="{{ route('categories.update', $category->id) }}" method="POST">
             @csrf
+            @method('PUT')
 
             <!-- Name -->
             <label class="block mb-1">Category Name</label>
-            <input type="text" name="name" class="w-full border p-2 rounded mb-4" placeholder="e.g Food">
+            <input type="text" name="name" value="{{ $category->name }}"
+                class="w-full border p-2 rounded mb-4" placeholder="e.g Food">
 
             <!-- Type -->
             <label class="block mb-1">Type</label>
             <select name="type" class="w-full border p-2 rounded mb-4">
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
+                <option value="income" {{ $category->type == 'income' ? 'selected' : '' }}>Income</option>
+                <option value="expense" {{ $category->type == 'expense' ? 'selected' : '' }}>Expense</option>
             </select>
 
             <!-- Icon Picker -->
@@ -29,7 +31,8 @@
                 @foreach ($icons as $icon)
                     <label class="cursor-pointer">
 
-                        <input type="radio" name="icon" value="{{ $icon }}" class="peer hidden">
+                        <input type="radio" name="icon" value="{{ $icon }}" class="peer hidden"
+                            {{ $category->icon == $icon ? 'checked' : '' }}>
 
                         <div
                             class="flex items-center justify-center border rounded-lg p-3 text-xl
@@ -48,7 +51,7 @@
 
             <!-- Submit -->
             <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
-                Save Category
+                Update Category
             </button>
 
         </form>

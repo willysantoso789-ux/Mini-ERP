@@ -8,9 +8,19 @@
         <div class="flex justify-between mb-4">
             <h2 class="text-xl font-semibold">Transactions</h2>
 
-            <a href="{{ route('transactions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
-                + Add Transaction
-            </a>
+            <div class="flex gap-3 mb-4">
+
+                <a href="{{ route('transactions.create', ['type' => 'income']) }}"
+                    class="bg-green-500 text-white px-4 py-2 rounded">
+                    + Income
+                </a>
+
+                <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
+                    class="bg-red-500 text-white px-4 py-2 rounded">
+                    + Expense
+                </a>
+
+            </div>
         </div>
 
         <form method="GET" class="flex gap-4 mb-4">
@@ -74,14 +84,16 @@
                             @endif
                         </td>
 
-                        <td class="font-semibold {{ $trx->type == 'income' ? 'text-green-500' : 'text-red-500' }} py-2">
+                        <td class="{{ $trx->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $trx->type == 'income' ? '+' : '-' }}
                             Rp {{ number_format($trx->amount, 0, ',', '.') }}
                         </td>
 
                         <td class="flex gap-2 py-2">
                             <a href="{{ route('transactions.edit', $trx->id) }}">Edit</a>
 
-                            <form method="POST" action="{{ route('transactions.destroy', $trx->id) }}">
+                            <form method="POST" action="{{ route('transactions.destroy', $trx->id) }}"
+                                onsubmit="return confirm('Are you sure you want to delete this transaction?');">
                                 @csrf
                                 @method('DELETE')
 
