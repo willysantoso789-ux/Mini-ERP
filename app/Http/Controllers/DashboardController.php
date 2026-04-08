@@ -59,14 +59,69 @@ class DashboardController extends Controller
         $categoryData = $categoryStats->pluck('total');
 
         // balance trend
+        $transactionsPerMonth = Transaction::selectRaw("
+            YEAR(transaction_date) as year,
+            MONTH(transaction_date) as month,
+            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
+            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
+        ")
+        ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+        ->orderByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+        ->get();
+
+        $data = [];
+
+        foreach ($transactionsPerMonth as $item) {
+            $key = $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+
+            $data[$key] = [
+                'income' => $item->income,
+                'expense' => $item->expense,
+            ];
+        }
+
+        $keys = array_keys($data);
+        $lastKey = end($keys); // contoh: 2026-04
+
+        $months = [];
         $balanceTrend = [];
         $currentBalance = 0;
 
-        for ($i = 0; $i < 12; $i++) {
-            $currentBalance += $incomeData[$i];
-            $currentBalance -= $expenseData[$i];
+        $period = \Carbon\Carbon::createFromFormat('Y-m', $lastKey);
 
-            $balanceTrend[] = $currentBalance;
+        //generate mundur 12 bulan
+        $timeline = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = $period->copy()->subMonths($i);
+            $key = $date->format('Y-m');
+
+            $timeline[] = $key;
+        }
+
+        $started = false;
+        foreach ($timeline as $key) {
+
+            if (isset($data[$key])) {
+                $started = true;
+
+                $currentBalance += $data[$key]['income'];
+                $currentBalance -= $data[$key]['expense'];
+
+                $balanceTrend[] = $currentBalance;
+            } else {
+
+                if (!$started) {
+                    // sebelum transaksi pertama
+                    $balanceTrend[] = 0;
+                } else {
+                    // setelah mulai → carry
+                    $balanceTrend[] = $currentBalance;
+                }
+            }
+
+            // label bulan
+            $months[] = \Carbon\Carbon::createFromFormat('Y-m', $key)->format('M y');
         }
 
         //recent transactions
