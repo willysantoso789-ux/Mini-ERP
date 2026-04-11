@@ -12,15 +12,20 @@ class Transaction extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'wallet_id',    
         'category_id',
         'description',
         'amount',
-        'type',
         'transaction_date',
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
     }
 }

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('wallet_id')->constrained()->cascadeOnDelete();
-            $table->string('description');
-            $table->decimal('amount', 12, 2);
-            $table->date('transaction_date');
+            $table->string('name');
+            $table->enum('type', ['cash','bank','ewallet','other']);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('wallets');
     }
 };
-
-//2026_03_10_144809_
-//2026_04_11_163317_

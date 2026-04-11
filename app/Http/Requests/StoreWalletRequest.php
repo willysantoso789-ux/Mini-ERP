@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransactionRequest extends FormRequest
+class StoreWalletRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,12 +22,9 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'wallet_id' => 'required|exists:wallets,id',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0',
-            'type' => 'required|in:income,expense',
-            'transaction_date' => 'required|date',
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:cash,bank,e-wallet,other',
+            'initial_balance' => 'nullable|numeric|min:0'
         ];
     }
 }

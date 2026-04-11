@@ -77,15 +77,15 @@
                         <td class="py-2">{{ $trx->category->name }}</td>
 
                         <td class="py-2">
-                            @if ($trx->type == 'income')
+                            @if ($trx->category->type == 'income')
                                 <span class="text-green-600">Income</span>
                             @else
                                 <span class="text-red-600">Expense</span>
                             @endif
                         </td>
 
-                        <td class="{{ $trx->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $trx->type == 'income' ? '+' : '-' }}
+                        <td class="{{ $trx->category->type == 'income' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $trx->category->type == 'income' ? '+' : '-' }}
                             Rp {{ number_format($trx->amount, 0, ',', '.') }}
                         </td>
 
