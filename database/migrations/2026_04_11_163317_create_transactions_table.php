@@ -31,6 +31,3 @@ return new class extends Migration
         Schema::dropIfExists('transactions');
     }
 };
-
-//2026_03_10_144809_
-//2026_04_11_163317_

@@ -8,11 +8,6 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Categories</h1>
-
-            <a href="{{ route('categories.create') }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-                + Add Category
-            </a>
         </div>
 
         <!-- Grid -->
@@ -20,7 +15,7 @@
 
             <!-- Add Card -->
             <a href="{{ route('categories.create') }}"
-                class="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 hover:bg-gray-50 transition">
+                class="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 hover:bg-gray-100 hover:scale-[1.02] transition">
 
                 <span class="text-3xl mb-2">+</span>
                 <p class="text-gray-500">Add Category</p>
@@ -32,7 +27,7 @@
                     <!-- Icon -->
                     <div
                         class="w-12 h-12 flex items-center justify-center rounded-lg mb-3
-            {{ $cat->type == 'income' ? 'bg-green-100' : 'bg-red-100' }}">
+                        {{ $cat->type == 'income' ? 'bg-green-100' : 'bg-red-100' }}">
 
                         <span class="text-xl">
                             {{ $cat->icon ?? '📁' }}
@@ -47,7 +42,7 @@
 
                         <span
                             class="text-xs px-2 py-1 rounded
-                {{ $cat->type == 'income' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+                            {{ $cat->type == 'income' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
                             {{ ucfirst($cat->type) }}
                         </span>
                     </div>

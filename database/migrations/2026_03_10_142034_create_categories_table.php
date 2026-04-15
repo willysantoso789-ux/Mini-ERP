@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->enum('type',['income','expense']);
             $table->string('icon')->nullable();
+            $table->boolean('is_system')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

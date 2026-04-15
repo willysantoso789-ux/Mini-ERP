@@ -10,19 +10,41 @@ class DashboardController extends Controller
     public function index()
     {
         //stats card
-        $income = Transaction::where('type','income')->sum('amount');
-        $expense = Transaction::where('type','expense')->sum('amount');
-        $balance = $income - $expense;
+        $income = Transaction::whereHas('category', function ($q) {
+            $q->where('type', 'income')
+            ->where('is_system', false);
+        })->sum('amount');
+
+        $expense = Transaction::whereHas('category', function ($q) {
+            $q->where('type', 'expense')
+            ->where('is_system', false);
+        })->sum('amount');
+
+        $totalIncomeAll = Transaction::whereHas('category', fn($q) =>
+            $q->where('type', 'income')
+        )->sum('amount');
+
+        $totalExpenseAll = Transaction::whereHas('category', fn($q) =>
+            $q->where('type', 'expense')
+        )->sum('amount');
+
+        $balance = $totalIncomeAll - $totalExpenseAll;
 
         //income vs expense chart
         // ambil data income per bulan
-        $incomeMonthly = Transaction::where('type','income')
+        $incomeMonthly = Transaction::whereHas('category', fn($q) =>
+                $q->where('type','income')
+                ->where('is_system', false)
+            )
             ->selectRaw('MONTH(transaction_date) as month, SUM(amount) as total')
             ->groupBy('month')
             ->pluck('total','month');
 
         // ambil data expense per bulan
-        $expenseMonthly = Transaction::where('type','expense')
+        $expenseMonthly = Transaction::whereHas('category', fn($q) =>
+                $q->where('type','expense')
+                ->where('is_system', false)
+            )
             ->selectRaw('MONTH(transaction_date) as month, SUM(amount) as total')
             ->groupBy('month')
             ->pluck('total','month');
@@ -40,8 +62,10 @@ class DashboardController extends Controller
         //expense by category chart
         $selectedMonth = request('month');
 
-        $query = Transaction::with('category')
-            ->where('type','expense');
+        $query = Transaction::whereHas('category', fn($q) =>
+            $q->where('type','expense')
+            ->where('is_system', false)
+        )->with('category');
 
         if ($selectedMonth) {
             $query->whereMonth('transaction_date', $selectedMonth);
@@ -52,22 +76,23 @@ class DashboardController extends Controller
             ->groupBy('category_id')
             ->get();
 
-        $categoryLabels = $categoryStats->map(function($item){
-            return $item->category->name;
-        });
+        $categoryLabels = $categoryStats->map(fn($item) =>
+            $item->category->name
+        );
 
         $categoryData = $categoryStats->pluck('total');
 
         // balance trend
-        $transactionsPerMonth = Transaction::selectRaw("
-            YEAR(transaction_date) as year,
-            MONTH(transaction_date) as month,
-            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
-            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
-        ")
-        ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
-        ->orderByRaw('YEAR(transaction_date), MONTH(transaction_date)')
-        ->get();
+        $transactionsPerMonth = Transaction::join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->selectRaw("
+                YEAR(transaction_date) as year,
+                MONTH(transaction_date) as month,
+                SUM(CASE WHEN categories.type = 'income' THEN amount ELSE 0 END) as income,
+                SUM(CASE WHEN categories.type = 'expense' THEN amount ELSE 0 END) as expense
+            ")
+            ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+            ->orderByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+            ->get();
 
         $data = [];
 
@@ -81,7 +106,10 @@ class DashboardController extends Controller
         }
 
         $keys = array_keys($data);
-        $lastKey = end($keys); // contoh: 2026-04
+
+        $lastKey = !empty($keys) 
+            ? end($keys) 
+            : now()->format('Y-m');// contoh: 2026-04
 
         $months = [];
         $balanceTrend = [];
@@ -126,13 +154,19 @@ class DashboardController extends Controller
 
         //recent transactions
         $recentIncome = Transaction::with('category')
-            ->where('type','income')
+            ->whereHas('category', fn($q) => 
+                $q->where('type','income')
+                ->where('is_system', false)
+            )
             ->latest()
             ->take(5)
             ->get();
 
         $recentExpense = Transaction::with('category')
-            ->where('type','expense')
+            ->whereHas('category', fn($q) => 
+                $q->where('type','expense')
+                ->where('is_system', false)
+            )
             ->latest()
             ->take(5)
             ->get();

@@ -15,6 +15,7 @@ class Category extends Model
         'name',
         'type',
         'icon',
+        'is_system'
     ];
 
     public function transactions()

@@ -13,7 +13,18 @@ class WalletController extends Controller
      */
     public function index()
     {
-        //
+        $wallets = Wallet::withSum(['transactions as balance' => function ($q) {
+            $q->selectRaw("
+                SUM(
+                    CASE 
+                        WHEN type = 'income' THEN amount
+                        ELSE -amount
+                    END
+                )
+            ");
+        }], 'amount')->get();
+
+        return view('wallet.index', compact('wallets'));
     }
 
     /**
@@ -40,12 +51,21 @@ class WalletController extends Controller
 
     public function createInitialBalance(Wallet $wallet, $initialBalance)
     {
-        if (!$initialBalance && $initialBalance > 0) {
+        if ($initialBalance && $initialBalance > 0) {
+            $category = \App\Models\Category::firstOrCreate(
+                [
+                    'name' => 'Initial Balance',
+                    'type' => 'income',
+                ],
+                [
+                    'icon' => '💰',
+                    'is_system' => true,
+                ]
+            );
             $wallet->transactions()->create([
-                'category_id' => null, // No category for initial balance
+                'category_id' => $category->id, // Use the created category
                 'description' => 'Initial Balance',
                 'amount' => $initialBalance,
-                'type' => 'income', // Assuming initial balance is treated as income
                 'transaction_date' => now(),
             ]);
         }
@@ -72,7 +92,8 @@ class WalletController extends Controller
      */
     public function update(UpdateWalletRequest $request, Wallet $wallet)
     {
-        //
+        $wallet->update($request->only('name','type'));
+        return redirect()->route('wallets.index')->with('success', 'Wallet updated successfully.');
     }
 
     /**
@@ -80,6 +101,7 @@ class WalletController extends Controller
      */
     public function destroy(Wallet $wallet)
     {
-        //
+        $wallet->delete();
+        return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }
 }

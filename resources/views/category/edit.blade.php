@@ -14,11 +14,11 @@
             <!-- Name -->
             <label class="block mb-1">Category Name</label>
             <input type="text" name="name" value="{{ $category->name }}"
-                class="w-full border p-2 rounded mb-4" placeholder="e.g Food">
+                class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="e.g Food">
 
             <!-- Type -->
             <label class="block mb-1">Type</label>
-            <select name="type" class="w-full border p-2 rounded mb-4">
+            <select name="type" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200">
                 <option value="income" {{ $category->type == 'income' ? 'selected' : '' }}>Income</option>
                 <option value="expense" {{ $category->type == 'expense' ? 'selected' : '' }}>Expense</option>
             </select>
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Submit -->
-            <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+            <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 hover:transition duration-200">
                 Update Category
             </button>
 

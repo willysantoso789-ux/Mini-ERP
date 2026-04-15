@@ -9,6 +9,7 @@
     @vite('resources/css/app.css', 'resources/js/app.js')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
 <body class="bg-gray-50 font-sans text-gray-900">
@@ -24,10 +25,46 @@
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Transactions</a>
                 <a href="{{ route('categories.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Categories</a>
+                <a href="{{ route('wallets.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Wallets</a>
             </nav>
         </aside>
         <main class="flex-1 overflow-y-auto p-8">
             @yield('content')
         </main>
+    </div>
+
+    <div x-data="{ show: false, message: '', type: 'success' }" x-init="@if (session('success')) show = true;
+            message = '{{ session('success') }}';
+            type = 'success';
+        @elseif(session('error'))
+            show = true;
+            message = '{{ session('error') }}';
+            type = 'error'; @endif
+    
+    if (show) {
+        setTimeout(() => show = false, 3000);
+    }" x-show="show"
+        x-transition:enter="transform ease-out duration-300" x-transition:enter-start="translate-y-[-100%] opacity-0"
+        x-transition:enter-end="translate-y-0 opacity-100" x-transition:leave="transform ease-in duration-300"
+        x-transition:leave-start="translate-y-0 opacity-100" x-transition:leave-end="translate-y-[-100%] opacity-0"
+        class="fixed top-5 right-5 z-50">
+
+        <div class="px-4 py-3 rounded-lg shadow-lg text-white flex items-center gap-3"
+            :class="type === 'success' ? 'bg-green-500' : 'bg-red-500'">
+
+            <!-- ICON -->
+            <span x-text="type === 'success' ? '✅' : '❌'"></span>
+
+            <!-- MESSAGE -->
+            <span x-text="message"></span>
+
+            <!-- CLOSE BUTTON -->
+            <button @click="show = false" class="ml-2">
+                <span class="text-xl">&times;</span>
+            </button>
+
+        </div>
+
     </div>
 </body>

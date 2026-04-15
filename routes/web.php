@@ -17,3 +17,4 @@ Route::get('/Kategori', function () {
 
 Route::resource('transactions', \App\Http\Controllers\TransactionController::class);
 Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+Route::resource('wallets', \App\Http\Controllers\WalletController::class);

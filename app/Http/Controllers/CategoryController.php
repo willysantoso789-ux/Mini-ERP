@@ -55,6 +55,10 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        if ($category->is_system) {
+            return redirect()->route('categories.index')->with('error', 'System categories cannot be edited.');
+        }
+
         $icons = ['🍔','🚗','🏠','💡','🛍','🎮','💰','📈'];
         return view('category.edit', compact('category','icons')); 
     }
@@ -74,6 +78,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->is_system) {
+            return redirect()->route('categories.index')->with('error', 'System categories cannot be deleted.');
+        }
+
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
