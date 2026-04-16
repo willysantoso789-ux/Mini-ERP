@@ -80,6 +80,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
+        dd($request);
         $data = $request->validated();
         Transaction::create($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
