@@ -15,7 +15,7 @@
             <!-- DATE -->
             <div>
                 <label class="block mb-1">Date</label>
-                <input type="date" name="transaction_date" value="{{ $transaction->transaction_date->format('Y-m-d') }}"
+                <input type="date" name="transaction_date" value="{{ $transaction->transaction_date }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
             </div>

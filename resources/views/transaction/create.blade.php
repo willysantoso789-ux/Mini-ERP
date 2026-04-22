@@ -3,9 +3,6 @@
 @section('title', 'Create Transaction')
 
 @section('content')
-    {{-- @php
-    @dd($wallets)
-@endphp --}}
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold mb-4">
             Create Transaction

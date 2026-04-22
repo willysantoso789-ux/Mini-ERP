@@ -62,16 +62,6 @@ class TransactionController extends Controller
                 ->with('error', 'Please create category and wallet first');
         }
 
-        if ($categories->isEmpty()) {
-            return redirect()->route('categories.index')
-                ->with('error', 'Please create a category first');
-        }
-
-        if ($wallets->isEmpty()) {
-            return redirect()->route('wallets.index')
-                ->with('error', 'Please create a wallet first');
-        }
-
         return view('transaction.create', compact('categories','wallets'));
     }
 
@@ -80,7 +70,6 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        dd($request);
         $data = $request->validated();
         Transaction::create($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
