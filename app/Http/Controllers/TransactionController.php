@@ -36,8 +36,18 @@ class TransactionController extends Controller
             $query->where('wallet_id', request('wallet'));
         }
 
-        if (request('date')) {
-            $query->whereDate('transaction_date', request('date'));
+        if (request('start_date') && request('end_date')) {
+            if (request('start_date') > request('end_date')) {
+                return back()->with('error', 'Start date cannot be greater than end date');
+            }
+            $query->whereBetween('transaction_date', [
+                request('start_date'),
+                request('end_date')
+            ]);
+        } elseif (request('start_date')) {
+            $query->whereDate('transaction_date', '>=', request('start_date'));
+        } elseif (request('end_date')) {
+            $query->whereDate('transaction_date', '<=', request('end_date'));
         }
 
         $transactions = $query->latest()->paginate(10);
@@ -51,9 +61,10 @@ class TransactionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $categories = Category::where('is_system', false)->get();
+        $type = $request->type; // income / expense
+        $categories = Category::where('is_system', false)->where('type', $type)->get();
         $wallets = Wallet::all();
 
         //kalau salah satu kosong → block
@@ -88,7 +99,7 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        $categories = Category::where('is_system', false)->get();
+        $categories = Category::where('is_system', false)->where('type', $transaction->category->type)->get();
         $wallets = Wallet::all();
 
         //BLOCK kalau category transaction adalah system

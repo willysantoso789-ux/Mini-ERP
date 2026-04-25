@@ -30,6 +30,42 @@ class DashboardController extends Controller
 
         $balance = $totalIncomeAll - $totalExpenseAll;
 
+        //financial insight card
+        $topExpense = Transaction::whereHas('category', fn($q) =>
+                $q->where('type','expense')
+                ->where('is_system', false)
+            )
+            ->selectRaw('category_id, SUM(amount) as total')
+            ->groupBy('category_id')
+            ->orderByDesc('total')
+            ->with('category')
+            ->first();
+
+        $topExpenseCategory = $topExpense->category->name ?? null;
+
+        $topIncome = Transaction::whereHas('category', fn($q) =>
+                $q->where('type','income')
+                ->where('is_system', false)
+            )
+            ->selectRaw('category_id, SUM(amount) as total')
+            ->groupBy('category_id')
+            ->orderByDesc('total')
+            ->with('category')
+            ->first();
+
+        $topIncomeCategory = $topIncome->category->name ?? null;
+
+        $mostExpense = Transaction::whereHas('category', fn($q) =>
+                $q->where('type','expense')
+                ->where('is_system', false)
+            )
+            ->selectRaw('YEAR(transaction_date) as year, MONTH(transaction_date) as month, SUM(amount) as total')
+            ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+            ->orderByDesc('total')
+            ->first();
+        
+        $mostExpenseMonth = $mostExpense ? \Carbon\Carbon::create($mostExpense->year, $mostExpense->month)->format('F Y') : null;
+
         //income vs expense chart
         // ambil data income per bulan
         $incomeMonthly = Transaction::whereHas('category', fn($q) =>
@@ -49,7 +85,7 @@ class DashboardController extends Controller
             ->groupBy('month')
             ->pluck('total','month');
 
-        $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        $monthsLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
         $incomeData = [];
         $expenseData = [];
@@ -82,6 +118,29 @@ class DashboardController extends Controller
 
         $categoryData = $categoryStats->pluck('total');
 
+        //income by category chart
+        $selectedIncomeMonth = request('month_income');
+
+        $query = Transaction::whereHas('category', fn($q) =>
+            $q->where('type','income')
+            ->where('is_system', false)
+        )->with('category');
+
+        if ($selectedIncomeMonth) {
+            $query->whereMonth('transaction_date', $selectedIncomeMonth);
+        }
+
+        $incomeCategoryStats = $query
+            ->selectRaw('category_id, SUM(amount) as total')
+            ->groupBy('category_id')
+            ->get();
+
+        $incomeCategoryLabels = $incomeCategoryStats->map(fn($item) =>
+            $item->category->name
+        );
+        
+        $incomeCategoryData = $incomeCategoryStats->pluck('total');
+
         // balance trend
         $transactionsPerMonth = Transaction::join('categories', 'transactions.category_id', '=', 'categories.id')
             ->selectRaw("
@@ -111,7 +170,7 @@ class DashboardController extends Controller
             ? end($keys) 
             : now()->format('Y-m');// contoh: 2026-04
 
-        $months = [];
+        $trendMonths = [];
         $balanceTrend = [];
         $currentBalance = 0;
 
@@ -149,7 +208,7 @@ class DashboardController extends Controller
             }
 
             // label bulan
-            $months[] = \Carbon\Carbon::createFromFormat('Y-m', $key)->format('M y');
+            $trendMonths[] = \Carbon\Carbon::createFromFormat('Y-m', $key)->format('M y');
         }
 
         //recent transactions
@@ -171,6 +230,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('dashboard.index', compact('income','expense','balance','months','incomeData','expenseData','categoryLabels','categoryData','balanceTrend','recentIncome','recentExpense'));
+        return view('dashboard.index', compact('income','expense','balance', 'topExpenseCategory', 'topIncomeCategory', 'mostExpenseMonth', 'monthsLabels','incomeData','expenseData','categoryLabels','categoryData','incomeCategoryLabels','incomeCategoryData','balanceTrend','trendMonths','recentIncome','recentExpense'));
     }
 }

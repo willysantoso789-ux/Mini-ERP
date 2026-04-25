@@ -9,58 +9,108 @@
         <div class="flex justify-between mb-4">
             <h2 class="text-xl font-semibold">Transactions</h2>
 
-            <a href="{{ route('transactions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition hover:scale-[1.02]">
-                + Transaction
-            </a>
+            <div class="flex gap-2">
+                <a href="{{ route('transactions.create', ['type' => 'income']) }}"
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
+                    + Income
+                </a>
+
+                <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
+                    + Expense
+                </a>
+            </div>
         </div>
 
         <!-- FILTER -->
-        <form method="GET" class="flex flex-wrap gap-3 mb-4">
+        <form method="GET" class="space-y-3 mb-4">
 
-            <!-- SEARCH -->
-            <input type="text" name="search" placeholder="Search..." value="{{ request('search') }}"
-                class="border p-2 rounded">
+            <!-- ROW 1 -->
+            <div class="flex flex-wrap gap-3 items-end">
 
-            <!-- CATEGORY -->
-            <select name="category" class="border p-2 rounded">
-                <option value="">All Categories</option>
-                @foreach ($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                @endforeach
-            </select>
+                <!-- SEARCH -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">Search</label>
+                    <input type="text" name="search" placeholder="Search..."
+                        value="{{ request('search') }}"
+                        class="border p-2 rounded w-[180px]">
+                </div>
 
-            <!-- TYPE (AMBIL DARI CATEGORY) -->
-            <select name="type" class="border p-2 rounded">
-                <option value="">All Type</option>
-                <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Income</option>
-                <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
-            </select>
+                <!-- TYPE -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">Type</label>
+                    <select name="type" id="type" class="border p-2 rounded w-[140px]">
+                        <option value="">All</option>
+                        <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Income</option>
+                        <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
+                    </select>
+                </div>
 
-            <!-- WALLET -->
-            <select name="wallet" class="border p-2 rounded">
-                <option value="">All Wallet</option>
-                @foreach ($wallets as $wallet)
-                    <option value="{{ $wallet->id }}" {{ request('wallet') == $wallet->id ? 'selected' : '' }}>
-                        {{ $wallet->name }}
-                    </option>
-                @endforeach
-            </select>
+                <!-- CATEGORY -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">Category</label>
+                    <select name="category" id="category" class="border p-2 rounded w-[180px]">
+                        <option value="">All</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                {{ $cat->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <!-- DATE -->
-            <input type="date" name="date" value="{{ request('date') }}" class="border p-2 rounded">
+                <!-- WALLET -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">Wallet</label>
+                    <select name="wallet" class="border p-2 rounded w-[160px]">
+                        <option value="">All</option>
+                        @foreach ($wallets as $wallet)
+                            <option value="{{ $wallet->id }}" {{ request('wallet') == $wallet->id ? 'selected' : '' }}>
+                                {{ $wallet->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <!-- ACTION -->
-            <button class="bg-blue-500 text-white px-4 py-2 rounded">
-                Filter
-            </button>
+                <!-- FROM -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">From</label>
+                    <input type="date" name="start_date"
+                        value="{{ request('start_date') }}"
+                        class="border p-2 rounded w-[150px]">
+                </div>
 
-            <a href="{{ route('transactions.index') }}" class="bg-gray-300 px-4 py-2 rounded">
-                Reset
-            </a>
+                <!-- TO -->
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 mb-1">To</label>
+                    <input type="date" name="end_date"
+                        value="{{ request('end_date') }}"
+                        class="border p-2 rounded w-[150px]">
+                </div>
 
+                <!-- ACTION -->
+                <div class="flex gap-2">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+                        Apply
+                    </button>
+
+                    <a href="{{ route('transactions.index') }}"
+                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
+                        Reset
+                    </a>
+                </div>
+            </div>
         </form>
+
+        <!-- FILTER INFO -->
+        @if(request('start_date') || request('end_date'))
+            <p class="text-sm text-gray-500 mb-3">
+                Showing:
+                {{ request('start_date') ?? '...' }}
+                →
+                {{ request('end_date') ?? '...' }}
+            </p>
+        @endif
 
         <!-- TABLE -->
         <table class="w-full text-left">
@@ -152,7 +202,7 @@
                                     <p class="text-sm mb-3">Try adjusting your filter settings</p>
 
                                     <a href="{{ route('transactions.index') }}"
-                                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
+                                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
                                         Reset Filter
                                     </a>
                                 @else
@@ -160,12 +210,18 @@
                                     <p class="font-medium">No transactions yet</p>
                                     <p class="text-sm mb-3">Start by adding your first transaction 🚀</p>
 
-                                    <a href="{{ route('transactions.create') }}"
-                                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                        + Add Transaction
-                                    </a>
-                                @endif
+                                    <div class="flex gap-2">
+                                        <a href="{{ route('transactions.create', ['type' => 'income']) }}"
+                                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
+                                            + Income
+                                        </a>
 
+                                        <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
+                                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
+                                            + Expense
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -180,4 +236,37 @@
     </div>
 
 </div>
+
+<script>
+    //filter transaksi
+    const allCategories = @json($categories);
+    const typeSelect = document.getElementById('type');
+    const categorySelect = document.getElementById('category');
+
+    function loadCategories(type) {
+        categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+        let filtered = allCategories;
+
+        if (type) {
+            filtered = allCategories.filter(cat => cat.type === type);
+        }
+
+        filtered.forEach(cat => {
+            categorySelect.innerHTML += `
+                <option value="${cat.id}">
+                    ${cat.name}
+                </option>
+            `;
+        });
+    }
+
+    // trigger saat type berubah
+    typeSelect.addEventListener('change', function () {
+        loadCategories(this.value);
+    });
+
+    // INIT (biar gak kosong saat reload/filter)
+    loadCategories(typeSelect.value);
+</script>
 @endsection

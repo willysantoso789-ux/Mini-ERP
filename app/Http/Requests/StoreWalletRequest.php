@@ -23,7 +23,7 @@ class StoreWalletRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'type' => 'required|in:cash,bank,e-wallet,other',
+            'type' => 'required|in:cash,bank,ewallet,other',
             'initial_balance' => 'nullable|numeric|min:0'
         ];
     }
