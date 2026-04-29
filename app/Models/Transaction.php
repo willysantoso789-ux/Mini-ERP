@@ -14,6 +14,7 @@ class Transaction extends Model
     protected $fillable = [
         'wallet_id',    
         'category_id',
+        'dream_id',
         'description',
         'amount',
         'transaction_date',
@@ -27,5 +28,10 @@ class Transaction extends Model
     public function wallet()
     {
         return $this->belongsTo(Wallet::class);
+    }
+
+    public function dream()
+    {
+        return $this->belongsTo(Dream::class);
     }
 }

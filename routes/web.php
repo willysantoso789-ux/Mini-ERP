@@ -18,3 +18,10 @@ Route::get('/Kategori', function () {
 Route::resource('transactions', \App\Http\Controllers\TransactionController::class);
 Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 Route::resource('wallets', \App\Http\Controllers\WalletController::class);
+
+Route::resource('dreams', \App\Http\Controllers\DreamController::class)->only(['index', 'store']);
+Route::post('dreams/{dream}/savings', [\App\Http\Controllers\DreamController::class, 'addSaving'])->name('dreams.savings.store');
+
+Route::resource('wallet-transfers', \App\Http\Controllers\WalletTransferController::class)->only(['index', 'store']);
+
+Route::get('financial-health', [\App\Http\Controllers\FinancialHealthController::class, 'index'])->name('financial-health.index');

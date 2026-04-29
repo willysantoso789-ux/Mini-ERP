@@ -20,13 +20,19 @@
             </div>
             <nav class="flex-1 px-4 space-y-2">
                 <a href="{{ route('dashboard') }}"
-                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Dashboard</a>
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-home mr-2"></i>Dashboard</a>
                 <a href="{{ route('transactions.index') }}"
-                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Transactions</a>
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-exchange-alt mr-2"></i>Transactions</a>
                 <a href="{{ route('categories.index') }}"
-                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Categories</a>
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-tags mr-2"></i>Categories</a>
                 <a href="{{ route('wallets.index') }}"
-                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">Wallets</a>
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-wallet mr-2"></i>Wallets</a>
+                <a href="{{ route('dreams.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-star mr-2"></i>Dream Planner</a>
+                <a href="{{ route('wallet-transfers.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-exchange-alt mr-2"></i>Transfers</a>
+                <a href="{{ route('financial-health.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-heartbeat mr-2"></i>Financial Health</a>
             </nav>
         </aside>
         <main class="flex-1 overflow-y-auto p-8">
