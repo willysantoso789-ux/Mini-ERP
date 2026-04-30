@@ -28,14 +28,14 @@
                 <div>
                     <h3 class="text-lg font-bold text-gray-800">{{ $dream->name }}</h3>
                     <p class="text-sm text-gray-500 mt-1">
-                        Target: ${{ number_format($dream->target_amount, 2) }}
+                        Target: Rp{{ number_format($dream->target_amount, 2) }}
                         @if($dream->deadline)
                             | Deadline: {{ \Carbon\Carbon::parse($dream->deadline)->format('M d, Y') }}
                         @endif
                     </p>
                 </div>
                 <div class="text-right">
-                    <span class="text-indigo-600 font-black text-xl">${{ number_format($dream->progress, 2) }}</span>
+                    <span class="text-indigo-600 font-black text-xl">Rp{{ number_format($dream->progress, 2) }}</span>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
             
             <div class="flex justify-between text-xs font-semibold text-gray-500 mb-6">
                 <span>{{ number_format($dream->percentage, 1) }}% achieved</span>
-                <span>${{ number_format($dream->remaining, 2) }} remaining</span>
+                <span>Rp{{ number_format($dream->remaining, 2) }} remaining</span>
             </div>
 
             @if($dream->percentage < 100)

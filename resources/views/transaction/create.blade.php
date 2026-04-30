@@ -17,6 +17,9 @@
                 <input type="date" name="transaction_date" value="{{ date('Y-m-d') }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
+                @error('transaction_date')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- DESCRIPTION -->
@@ -25,6 +28,9 @@
                 <input type="text" name="description"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
+                @error('description')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- CATEGORY -->
@@ -61,6 +67,9 @@
                         </option>
                     @endforeach
                 </select>
+                @error('category_id')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- WALLET -->
@@ -95,6 +104,9 @@
                         </option>
                     @endforeach
                 </select>
+                @error('wallet_id')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- AMOUNT -->
@@ -103,6 +115,9 @@
                 <input type="number" name="amount" step="0.01" min="0"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
+                @error('amount')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- BUTTON -->

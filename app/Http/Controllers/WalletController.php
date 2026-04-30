@@ -13,16 +13,16 @@ class WalletController extends Controller
      */
     public function index()
     {
-        $wallets = Wallet::withSum(['transactions as balance' => function ($q) {
-            $q->selectRaw("
-                SUM(
-                    CASE 
-                        WHEN type = 'income' THEN amount
-                        ELSE -amount
-                    END
-                )
-            ");
+        $wallets = Wallet::withSum(['transactions as income' => function ($q) {
+            $q->whereHas('category', fn($q) => $q->where('type', 'income'));
+        }], 'amount')
+        ->withSum(['transactions as expense' => function ($q) {
+            $q->whereHas('category', fn($q) => $q->where('type', 'expense'));
         }], 'amount')->get();
+
+        foreach ($wallets as $wallet) {
+            $wallet->balance = ($wallet->income ?? 0) - ($wallet->expense ?? 0);
+        }
 
         return view('wallet.index', compact('wallets'));
     }

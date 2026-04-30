@@ -13,6 +13,9 @@
             <!-- Name -->
             <label class="block mb-1">Category Name</label>
             <input type="text" name="name" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="e.g Food">
+            @error('name')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
 
             <!-- Type -->
             <label class="block mb-1">Type</label>
@@ -20,6 +23,9 @@
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
             </select>
+            @error('type')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
 
             <!-- Icon Picker -->
             <label class="block mb-2">Choose Icon</label>
@@ -45,13 +51,14 @@
                 @endforeach
 
             </div>
+            @error('icon')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
 
             <!-- Submit -->
             <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 hover:transition duration-200">
                 Save Category
             </button>
-
         </form>
-
     </div>
 @endsection
