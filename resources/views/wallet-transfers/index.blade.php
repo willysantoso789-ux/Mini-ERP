@@ -115,7 +115,7 @@
                             <td class="p-4 text-sm text-gray-600">{{ $tx->wallet->name }}</td>
                             <td class="p-4 text-sm text-gray-500">{{ $tx->description }}</td>
                             <td class="p-4 text-sm font-bold {{ $tx->category->name == 'Transfer In' ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $tx->category->name == 'Transfer In' ? '+' : '-' }}${{ number_format($tx->amount, 2) }}
+                                {{ $tx->category->name == 'Transfer In' ? '+' : '-' }} Rp {{ number_format($tx->amount, 2) }}
                             </td>
                         </tr>
                         @empty
