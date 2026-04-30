@@ -12,7 +12,7 @@
 
             <!-- Name -->
             <label class="block mb-1">Category Name</label>
-            <input type="text" name="name" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="e.g Food">
+            <input type="text" name="name" value="{{ old('name') }}" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="e.g Food">
             @error('name')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -20,8 +20,8 @@
             <!-- Type -->
             <label class="block mb-1">Type</label>
             <select name="type" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
+                <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Income</option>
+                <option value="expense" {{ old('type') == 'expense' ? 'selected' : '' }}>Expense</option>
             </select>
             @error('type')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -35,7 +35,7 @@
                 @foreach ($icons as $icon)
                     <label class="cursor-pointer">
 
-                        <input type="radio" name="icon" value="{{ $icon }}" class="peer hidden">
+                        <input type="radio" name="icon" value="{{ $icon }}" {{ old('icon') == $icon ? 'checked' : '' }} class="peer hidden">
 
                         <div
                             class="flex items-center justify-center border rounded-lg p-3 text-xl

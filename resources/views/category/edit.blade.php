@@ -13,7 +13,7 @@
 
             <!-- Name -->
             <label class="block mb-1">Category Name</label>
-            <input type="text" name="name" value="{{ $category->name }}"
+            <input type="text" name="name" value="{{ old('name', $category->name) }}"
                 class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="e.g Food">
             @error('name')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -22,8 +22,8 @@
             <!-- Type -->
             <label class="block mb-1">Type</label>
             <select name="type" class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                <option value="income" {{ $category->type == 'income' ? 'selected' : '' }}>Income</option>
-                <option value="expense" {{ $category->type == 'expense' ? 'selected' : '' }}>Expense</option>
+                <option value="income" {{ old('type', $category->type) == 'income' ? 'selected' : '' }}>Income</option>
+                <option value="expense" {{ old('type', $category->type) == 'expense' ? 'selected' : '' }}>Expense</option>
             </select>
             @error('type')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -38,7 +38,7 @@
                     <label class="cursor-pointer">
 
                         <input type="radio" name="icon" value="{{ $icon }}" class="peer hidden"
-                            {{ $category->icon == $icon ? 'checked' : '' }}>
+                            {{ old('icon', $category->icon) == $icon ? 'checked' : '' }}>
 
                         <div
                             class="flex items-center justify-center border rounded-lg p-3 text-xl

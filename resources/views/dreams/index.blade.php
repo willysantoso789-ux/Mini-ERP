@@ -3,7 +3,7 @@
 @section('title', 'Dream Planner')
 
 @section('content')
-<div x-data="{ showModal: false }">
+<div x-data="{ showModal: {{ ($errors->has('name') || $errors->has('target_amount') || $errors->has('deadline')) ? 'true' : 'false' }} }">
     <div class="mb-6 flex justify-between items-center">
         <h1 class="text-2xl font-bold">Dream Planner</h1>
         <button @click="showModal = true" class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold">
@@ -60,10 +60,16 @@
                                 <option value="{{ $wallet->id }}">{{ $wallet->name }}</option>
                             @endforeach
                         </select>
+                        @error('wallet_id')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-600 mb-1">Amount</label>
                         <input type="number" step="0.01" min="0.01" name="amount" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm py-2 px-3 text-sm transition-all" placeholder="0.00">
+                        @error('amount')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 text-sm font-bold">
                         Add
@@ -104,15 +110,24 @@
                 @csrf
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Dream Name</label>
-                    <input type="text" name="name" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    <input type="text" name="name" value="{{ old('name') }}" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Target Amount</label>
-                    <input type="number" step="0.01" min="0.01" name="target_amount" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    <input type="number" step="0.01" min="0.01" name="target_amount" value="{{ old('target_amount') }}" required class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    @error('target_amount')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deadline (Optional)</label>
-                    <input type="date" name="deadline" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    <input type="date" name="deadline" value="{{ old('deadline') }}" class="w-full border-gray-300 rounded-md shadow-sm p-2 border">
+                    @error('deadline')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="flex justify-end gap-2 mt-6">
                     <button type="button" @click="showModal = false" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">Cancel</button>

@@ -14,7 +14,7 @@
             <!-- DATE -->
             <div>
                 <label class="block mb-1">Date</label>
-                <input type="date" name="transaction_date" value="{{ date('Y-m-d') }}"
+                <input type="date" name="transaction_date" value="{{ old('transaction_date', date('Y-m-d')) }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('transaction_date')
@@ -25,7 +25,7 @@
             <!-- DESCRIPTION -->
             <div>
                 <label class="block mb-1">Description</label>
-                <input type="text" name="description"
+                <input type="text" name="description" value="{{ old('description') }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('description')
@@ -62,7 +62,7 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                     @foreach ($categories->where('is_system', false) as $cat)
-                        <option value="{{ $cat->id }}">
+                        <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
                             {{ $cat->name }}
                         </option>
                     @endforeach
@@ -98,7 +98,7 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                     @foreach ($wallets as $wallet)
-                        <option value="{{ $wallet->id }}">
+                        <option value="{{ $wallet->id }}" {{ old('wallet_id') == $wallet->id ? 'selected' : '' }}>
 
                             {{ $wallet->name }}
                         </option>
@@ -112,7 +112,7 @@
             <!-- AMOUNT -->
             <div>
                 <label class="block mb-1">Amount</label>
-                <input type="number" name="amount" step="0.01" min="0"
+                <input type="number" name="amount" step="0.01" min="0" value="{{ old('amount') }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('amount')

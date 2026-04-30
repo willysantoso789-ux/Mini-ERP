@@ -30,9 +30,12 @@
                     <select name="from_wallet_id" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all">
                         <option value="">Select Source Wallet</option>
                         @foreach($wallets as $wallet)
-                            <option value="{{ $wallet->id }}">{{ $wallet->name }}</option>
+                            <option value="{{ $wallet->id }}" {{ old('from_wallet_id') == $wallet->id ? 'selected' : '' }}>{{ $wallet->name }}</option>
                         @endforeach
                     </select>
+                    @error('from_wallet_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 
                 <div class="mb-4 flex justify-center text-gray-400 hover:text-indigo-500 transition-colors">
@@ -44,24 +47,36 @@
                     <select name="to_wallet_id" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all">
                         <option value="">Select Destination Wallet</option>
                         @foreach($wallets as $wallet)
-                            <option value="{{ $wallet->id }}">{{ $wallet->name }}</option>
+                            <option value="{{ $wallet->id }}" {{ old('to_wallet_id') == $wallet->id ? 'selected' : '' }}>{{ $wallet->name }}</option>
                         @endforeach
                     </select>
+                    @error('to_wallet_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4 group">
                     <label class="block text-sm font-semibold text-gray-700 mb-1 group-focus-within:text-indigo-600 transition-colors">Amount</label>
-                    <input type="number" step="0.01" min="0.01" name="amount" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all" placeholder="0.00">
+                    <input type="number" step="0.01" min="0.01" name="amount" value="{{ old('amount') }}" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all" placeholder="0.00">
+                    @error('amount')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-4 group">
                     <label class="block text-sm font-semibold text-gray-700 mb-1 group-focus-within:text-indigo-600 transition-colors">Date</label>
-                    <input type="date" name="transaction_date" required value="{{ date('Y-m-d') }}" class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all">
+                    <input type="date" name="transaction_date" required value="{{ old('transaction_date', date('Y-m-d')) }}" class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all">
+                    @error('transaction_date')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-6 group">
                     <label class="block text-sm font-semibold text-gray-700 mb-1 group-focus-within:text-indigo-600 transition-colors">Notes (Optional)</label>
-                    <input type="text" name="description" class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all" placeholder="e.g. Moving to savings">
+                    <input type="text" name="description" value="{{ old('description') }}" class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm p-2.5 border transition-all" placeholder="e.g. Moving to savings">
+                    @error('description')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all duration-300 font-bold">

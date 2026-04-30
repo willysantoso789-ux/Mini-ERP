@@ -92,6 +92,9 @@
                                 <label class="block mb-1">Wallet Name</label>
                                 <input type="text" name="name" x-model="form.name"
                                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                                @error('name')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -102,6 +105,9 @@
                                     <option value="ewallet">📱 E-Wallet</option>
                                     <option value="other">💰 Other</option>
                                 </select>
+                                @error('type')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <template x-if="!isEdit">
@@ -109,6 +115,9 @@
                                     <label class="block mb-1">Initial Balance</label>
                                     <input type="number" name="initial_balance" x-model="form.initial_balance"
                                         class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                                    @error('initial_balance')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </template>
 
@@ -160,15 +169,15 @@
     <script>
         function walletModal() {
             return {
-                open: false,
+                open: {{ $errors->any() ? 'true' : 'false' }},
                 isEdit: false,
                 isDelete: false,
 
                 form: {
                     id: null,
-                    name: '',
-                    type: 'cash',
-                    initial_balance: ''
+                    name: '{{ old('name', '') }}',
+                    type: '{{ old('type', 'cash') }}',
+                    initial_balance: '{{ old('initial_balance', '') }}'
                 },
 
                 openCreate() {

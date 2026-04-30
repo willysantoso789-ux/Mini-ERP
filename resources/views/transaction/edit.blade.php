@@ -15,7 +15,7 @@
             <!-- DATE -->
             <div>
                 <label class="block mb-1">Date</label>
-                <input type="date" name="transaction_date" value="{{ $transaction->transaction_date }}"
+                <input type="date" name="transaction_date" value="{{ old('transaction_date', $transaction->transaction_date) }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('transaction_date')
@@ -26,7 +26,7 @@
             <!-- DESCRIPTION -->
             <div>
                 <label class="block mb-1">Description</label>
-                <input type="text" name="description" value="{{ $transaction->description }}"
+                <input type="text" name="description" value="{{ old('description', $transaction->description) }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('description')
@@ -65,7 +65,7 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                     @foreach ($categories->where('is_system', false) as $cat)
-                        <option value="{{ $cat->id }}" {{ $transaction->category_id == $cat->id ? 'selected' : '' }}>
+                        <option value="{{ $cat->id }}" {{ old('category_id', $transaction->category_id) == $cat->id ? 'selected' : '' }}>
                             {{ $cat->name }}
                         </option>
                     @endforeach
@@ -101,7 +101,7 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                     @foreach ($wallets as $wallet)
-                        <option value="{{ $wallet->id }}" {{ $transaction->wallet_id == $wallet->id ? 'selected' : '' }}>
+                        <option value="{{ $wallet->id }}" {{ old('wallet_id', $transaction->wallet_id) == $wallet->id ? 'selected' : '' }}>
                             {{ $wallet->name }}
                         </option>
                     @endforeach
@@ -115,7 +115,7 @@
             <!-- AMOUNT -->
             <div>
                 <label class="block mb-1">Amount</label>
-                <input type="number" name="amount" step="0.01" min="0" value="{{ $transaction->amount }}"
+                <input type="number" name="amount" step="0.01" min="0" value="{{ old('amount', $transaction->amount) }}"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('amount')
