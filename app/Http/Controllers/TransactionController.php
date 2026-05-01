@@ -82,6 +82,15 @@ class TransactionController extends Controller
     public function store(StoreTransactionRequest $request)
     {
         $data = $request->validated();
+        
+        $category = Category::findOrFail($data['category_id']);
+        if ($category->type === 'expense') {
+            $wallet = Wallet::findOrFail($data['wallet_id']);
+            if ($data['amount'] > $wallet->balance) {
+                return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
+            }
+        }
+
         Transaction::create($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
     }
@@ -117,6 +126,21 @@ class TransactionController extends Controller
     public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
         $data = $request->validated();
+
+        $category = Category::findOrFail($data['category_id']);
+        if ($category->type === 'expense') {
+            $wallet = Wallet::findOrFail($data['wallet_id']);
+            // We need to add back the old amount if it's the same wallet, or just check simple balance if different.
+            // A simple approximation: if changing amount/wallet, check if (new_amount - old_amount(if same wallet)) > balance
+            $balance = $wallet->balance;
+            if ($transaction->wallet_id == $wallet->id && $transaction->category->type === 'expense') {
+                $balance += $transaction->amount;
+            }
+            if ($data['amount'] > $balance) {
+                return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
+            }
+        }
+
         $transaction->update($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }

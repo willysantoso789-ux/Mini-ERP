@@ -37,6 +37,10 @@ class DreamController extends Controller
 
     public function addSaving(SaveToDreamRequest $request, Dream $dream)
     {
+        $wallet = Wallet::findOrFail($request->wallet_id);
+        if ($request->amount > $wallet->balance) {
+            return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
+        }
         DB::transaction(function () use ($request, $dream) {
             $category = Category::firstOrCreate(
                 ['name' => 'Dream Saving', 'is_system' => true],

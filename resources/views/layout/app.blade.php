@@ -33,6 +33,12 @@
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-exchange-alt mr-2"></i>Transfers</a>
                 <a href="{{ route('financial-health.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-heartbeat mr-2"></i>Financial Health</a>
+                <a href="{{ route('budgets.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-chart-pie mr-2"></i>Budgets</a>
+                <a href="{{ route('recurring-transactions.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-sync-alt mr-2"></i>Recurring</a>
+                <a href="{{ route('smart-insight.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-lightbulb mr-2"></i>Insights</a>
             </nav>
         </aside>
         <main class="flex-1 overflow-y-auto p-8">

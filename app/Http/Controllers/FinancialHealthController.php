@@ -18,9 +18,16 @@ class FinancialHealthController extends Controller
             $q->where('type', 'expense')->where('is_system', false);
         })->sum('amount');
 
-        $savingsRate = $income > 0 ? ($income - $expense) / $income : 0;
-        $expenseRatio = $income > 0 ? $expense / $income : 0;
-        $cashflowRatio = $income > 0 ? ($income - $expense) / $income : 0;
+        if ($income <= 0) {
+            return view('financial-health.index', [
+                'income' => $income, 'expense' => $expense, 'savingsRate' => 0, 'expenseRatio' => 0, 'cashflowRatio' => 0,
+                'savingsScore' => 0, 'expenseScore' => 0, 'cashflowScore' => 0, 'finalScore' => 0, 'status' => 'No Data'
+            ]);
+        }
+
+        $savingsRate = ($income - $expense) / $income;
+        $expenseRatio = $expense / $income;
+        $cashflowRatio = ($income - $expense) / $income;
 
         // Scaling formulas
         $savingsScore = max(0, min(100, ($savingsRate / 0.20) * 100));

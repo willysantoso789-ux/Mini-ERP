@@ -25,3 +25,7 @@ Route::post('dreams/{dream}/savings', [\App\Http\Controllers\DreamController::cl
 Route::resource('wallet-transfers', \App\Http\Controllers\WalletTransferController::class)->only(['index', 'store']);
 
 Route::get('financial-health', [\App\Http\Controllers\FinancialHealthController::class, 'index'])->name('financial-health.index');
+
+Route::resource('budgets', \App\Http\Controllers\BudgetController::class)->only(['index', 'store']);
+Route::resource('recurring-transactions', \App\Http\Controllers\RecurringTransactionController::class)->only(['index', 'store', 'destroy']);
+Route::get('smart-insight', [\App\Http\Controllers\SmartInsightController::class, 'index'])->name('smart-insight.index');

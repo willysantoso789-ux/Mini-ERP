@@ -28,6 +28,18 @@ class WalletTransferController extends Controller
 
     public function store(StoreWalletTransferRequest $request)
     {
+        if ($request->from_wallet_id == $request->to_wallet_id) {
+            return back()->withInput()->with('error', 'Cannot transfer to the same wallet.');
+        }
+
+        if ($request->amount <= 0) {
+            return back()->withInput()->with('error', 'Transfer amount must be greater than zero.');
+        }
+
+        $fromWallet = Wallet::findOrFail($request->from_wallet_id);
+        if ($request->amount > $fromWallet->balance) {
+            return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
+        }
         DB::transaction(function () use ($request) {
             $transferOutCategory = Category::firstOrCreate(
                 ['name' => 'Transfer Out', 'is_system' => true],
