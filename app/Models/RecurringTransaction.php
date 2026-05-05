@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class RecurringTransaction extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = [
         'wallet_id',
@@ -17,6 +18,7 @@ class RecurringTransaction extends Model
         'frequency',
         'next_processing_date',
         'last_processed_at',
+        'user_id',
     ];
 
     public function wallet()
@@ -27,5 +29,10 @@ class RecurringTransaction extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

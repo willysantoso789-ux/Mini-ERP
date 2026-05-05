@@ -8,20 +8,45 @@ use App\Models\Transaction;
 
 class FinancialHealthController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $income = Transaction::whereHas('category', function ($q) {
-            $q->where('type', 'income')->where('is_system', false);
-        })->sum('amount');
+        $selectedMonth = $request->input('month', date('n'));
+        $selectedYear = $request->input('year', date('Y'));
 
-        $expense = Transaction::whereHas('category', function ($q) {
-            $q->where('type', 'expense')->where('is_system', false);
-        })->sum('amount');
+        $income = Transaction::whereMonth('transaction_date', $selectedMonth)
+            ->whereYear('transaction_date', $selectedYear)
+            ->whereHas('category', function ($q) {
+                $q->where('type', 'income')->where('is_system', false);
+            })->sum('amount');
+
+        $expense = Transaction::whereMonth('transaction_date', $selectedMonth)
+            ->whereYear('transaction_date', $selectedYear)
+            ->whereHas('category', function ($q) {
+                $q->where('type', 'expense')->where('is_system', false);
+            })->sum('amount');
+
+        // Fetch available months and years from transactions for the dropdown
+        $availableDates = Transaction::whereHas('category', function ($q) {
+            $q->where('is_system', false);
+        })->selectRaw('YEAR(transaction_date) as year, MONTH(transaction_date) as month')
+          ->distinct()
+          ->orderBy('year', 'desc')
+          ->orderBy('month', 'desc')
+          ->get();
+
+        if ($income <= 0 && $expense <= 0) {
+            return view('financial-health.index', [
+                'income' => $income, 'expense' => $expense, 'savingsRate' => 0, 'expenseRatio' => 0, 'cashflowRatio' => 0,
+                'savingsScore' => 0, 'expenseScore' => 0, 'cashflowScore' => 0, 'finalScore' => 0, 'status' => 'No Data',
+                'selectedMonth' => $selectedMonth, 'selectedYear' => $selectedYear, 'availableDates' => $availableDates
+            ]);
+        }
 
         if ($income <= 0) {
             return view('financial-health.index', [
                 'income' => $income, 'expense' => $expense, 'savingsRate' => 0, 'expenseRatio' => 0, 'cashflowRatio' => 0,
-                'savingsScore' => 0, 'expenseScore' => 0, 'cashflowScore' => 0, 'finalScore' => 0, 'status' => 'No Data'
+                'savingsScore' => 0, 'expenseScore' => 0, 'cashflowScore' => 0, 'finalScore' => 0, 'status' => 'Poor',
+                'selectedMonth' => $selectedMonth, 'selectedYear' => $selectedYear, 'availableDates' => $availableDates
             ]);
         }
 
@@ -37,7 +62,6 @@ class FinancialHealthController extends Controller
             $expenseScore = max(0, min(100, 100 - (($expenseRatio - 0.50) / 0.50) * 100));
         }
         if ($expenseRatio < 0.50) {
-            // Technically anything below 50% is 100 according to "scale 50% -> 100% into 100 -> 0"
             $expenseScore = 100;
         }
 
@@ -56,7 +80,8 @@ class FinancialHealthController extends Controller
 
         return view('financial-health.index', compact(
             'income', 'expense', 'savingsRate', 'expenseRatio', 'cashflowRatio',
-            'savingsScore', 'expenseScore', 'cashflowScore', 'finalScore', 'status'
+            'savingsScore', 'expenseScore', 'cashflowScore', 'finalScore', 'status',
+            'selectedMonth', 'selectedYear', 'availableDates'
         ));
     }
 }

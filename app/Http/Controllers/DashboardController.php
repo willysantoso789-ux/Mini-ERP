@@ -67,11 +67,21 @@ class DashboardController extends Controller
         $mostExpenseMonth = $mostExpense ? \Carbon\Carbon::create($mostExpense->year, $mostExpense->month)->format('F Y') : null;
 
         //income vs expense chart
+        // Get available years for the chart
+        $availableChartYears = Transaction::selectRaw('YEAR(transaction_date) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year');
+
+        $latestYear = $availableChartYears->first() ?? date('Y');
+        $selectedChartYear = request('chart_year', $latestYear);
+
         // ambil data income per bulan
         $incomeMonthly = Transaction::whereHas('category', fn($q) =>
                 $q->where('type','income')
                 ->where('is_system', false)
             )
+            ->whereYear('transaction_date', $selectedChartYear)
             ->selectRaw('MONTH(transaction_date) as month, SUM(amount) as total')
             ->groupBy('month')
             ->pluck('total','month');
@@ -81,6 +91,7 @@ class DashboardController extends Controller
                 $q->where('type','expense')
                 ->where('is_system', false)
             )
+            ->whereYear('transaction_date', $selectedChartYear)
             ->selectRaw('MONTH(transaction_date) as month, SUM(amount) as total')
             ->groupBy('month')
             ->pluck('total','month');
@@ -230,6 +241,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('dashboard.index', compact('income','expense','balance', 'topExpenseCategory', 'topIncomeCategory', 'mostExpenseMonth', 'monthsLabels','incomeData','expenseData','categoryLabels','categoryData','incomeCategoryLabels','incomeCategoryData','balanceTrend','trendMonths','recentIncome','recentExpense'));
+        return view('dashboard.index', compact('income','expense','balance', 'topExpenseCategory', 'topIncomeCategory', 'mostExpenseMonth', 'monthsLabels','incomeData','expenseData','categoryLabels','categoryData','incomeCategoryLabels','incomeCategoryData','balanceTrend','trendMonths','recentIncome','recentExpense', 'availableChartYears', 'selectedChartYear'));
     }
 }

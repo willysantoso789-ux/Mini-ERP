@@ -6,7 +6,7 @@
     <div class="p-6 flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold mb-4">Money Track Dashboard</h1>
         <div class="flex items-center space-x-3">
-            <span class="text-gray-700">Hello Willy</span>
+            <span class="text-gray-700">Hello {{ auth()->user()->name ?? 'User' }}</span>
             <img src="https://ui-avatars.com/api/?name=Admin" class="w-10 h-10 rounded-full">
         </div>
     </div>
@@ -68,7 +68,28 @@
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow mt-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Income vs Expense</h3>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Income vs Expense</h3>
+            <form method="GET" class="flex gap-2">
+                <input type="hidden" name="month" value="{{ request('month') }}">
+                <input type="hidden" name="month_income" value="{{ request('month_income') }}">
+                <select name="chart_year" class="border p-2 rounded text-sm">
+                    @foreach($availableChartYears as $year)
+                        <option value="{{ $year }}" {{ $selectedChartYear == $year ? 'selected' : '' }}>
+                            {{ $year }}
+                        </option>
+                    @endforeach
+                    @if($availableChartYears->isEmpty())
+                        <option value="{{ date('Y') }}" {{ $selectedChartYear == date('Y') ? 'selected' : '' }}>
+                            {{ date('Y') }}
+                        </option>
+                    @endif
+                </select>
+                <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 text-sm">
+                    Filter
+                </button>
+            </form>
+        </div>
         <canvas id="financeChart"></canvas>
     </div>
 

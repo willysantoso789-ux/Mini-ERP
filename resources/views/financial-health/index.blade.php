@@ -3,9 +3,42 @@
 @section('title', 'Financial Health')
 
 @section('content')
-<div class="mb-6">
-    <h1 class="text-2xl font-bold">Financial Health Score</h1>
-    <p class="text-gray-500 text-sm mt-1">Based on your real financial ratios excluding system transactions.</p>
+<div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold">
+            @if($selectedMonth == date('n') && $selectedYear == date('Y'))
+                Financial Health - Current Month
+            @else
+                Viewing: {{ date('F Y', mktime(0, 0, 0, $selectedMonth, 1, $selectedYear)) }}
+            @endif
+        </h1>
+        <p class="text-gray-500 text-sm mt-1">Based on your real financial ratios excluding system transactions.</p>
+    </div>
+    
+    <form method="GET" action="{{ route('financial-health.index') }}" class="flex items-center gap-2">
+        <select name="month" class="border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
+            @for($m = 1; $m <= 12; $m++)
+                <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
+                    {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                </option>
+            @endfor
+        </select>
+        <select name="year" class="border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
+            @foreach($availableDates as $date)
+                <option value="{{ $date->year }}" {{ $selectedYear == $date->year ? 'selected' : '' }}>
+                    {{ $date->year }}
+                </option>
+            @endforeach
+            @if($availableDates->where('year', date('Y'))->isEmpty())
+                <option value="{{ date('Y') }}" {{ $selectedYear == date('Y') ? 'selected' : '' }}>
+                    {{ date('Y') }}
+                </option>
+            @endif
+        </select>
+        <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 text-sm transition duration-200">
+            View
+        </button>
+    </form>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

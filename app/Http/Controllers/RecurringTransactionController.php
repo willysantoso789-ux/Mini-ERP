@@ -21,7 +21,17 @@ class RecurringTransactionController extends Controller
 
     public function store(StoreRecurringTransactionRequest $request)
     {
-        RecurringTransaction::create($request->validated());
+        $data = $request->validated();
+        
+        $category = Category::findOrFail($data['category_id']);
+        if ($category->type === 'expense') {
+            $wallet = Wallet::findOrFail($data['wallet_id']);
+            if ($data['amount'] > $wallet->balance) {
+                return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
+            }
+        }
+
+        RecurringTransaction::create($data);
 
         return redirect()->route('recurring-transactions.index')
             ->with('success', 'Recurring transaction created successfully.');

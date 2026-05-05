@@ -14,6 +14,7 @@
 
 <body class="bg-gray-50 font-sans text-gray-900">
     <div class="flex h-screen overflow-hidden">
+        @auth
         <aside class="w-64 bg-indigo-700 text-white shrink-0 hidden md:flex flex-col">
             <div class="p-6 text-2xl font-bold italic">
                 Money Track
@@ -39,8 +40,15 @@
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-sync-alt mr-2"></i>Recurring</a>
                 <a href="{{ route('smart-insight.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-lightbulb mr-2"></i>Insights</a>
+                <form action="{{ route('logout') }}" method="POST" class="mt-4 border-t border-indigo-500 pt-4">
+                    @csrf
+                    <button type="submit" class="w-full text-left py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </form>
             </nav>
         </aside>
+        @endauth
         <main class="flex-1 overflow-y-auto p-8">
             @yield('content')
         </main>

@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\BelongsToUser;
 
 class Transaction extends Model
 {
     /** @use HasFactory<\Database\Factories\TransactionFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToUser;
 
     protected $fillable = [
         'wallet_id',    
@@ -18,6 +19,7 @@ class Transaction extends Model
         'description',
         'amount',
         'transaction_date',
+        'user_id',
     ];
 
     public function category()
@@ -33,5 +35,10 @@ class Transaction extends Model
     public function dream()
     {
         return $this->belongsTo(Dream::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
