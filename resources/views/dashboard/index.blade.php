@@ -7,7 +7,7 @@
         <h1 class="text-3xl font-bold mb-4">Money Track Dashboard</h1>
         <div class="flex items-center space-x-3">
             <span class="text-gray-700">Hello {{ auth()->user()->name ?? 'User' }}</span>
-            <img src="https://ui-avatars.com/api/?name=Admin" class="w-10 h-10 rounded-full">
+            <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name ?? 'User' }}&background=random" class="w-10 h-10 rounded-full">
         </div>
     </div>
 
