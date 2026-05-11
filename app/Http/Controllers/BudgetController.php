@@ -15,8 +15,8 @@ class BudgetController extends Controller
         $month = $request->input('month', now()->month);
         $year = $request->input('year', now()->year);
 
-        $budgets = Budget::with('category')->where('month', $month)->where('year', $year)->get();
-        $categories = Category::where('type', 'expense')->where('is_system', false)->get();
+        $budgets = Budget::with('category')->where('user_id', auth()->id())->where('month', $month)->where('year', $year)->get();
+        $categories = Category::where('user_id', auth()->id())->where('type', 'expense')->where('is_system', false)->get();
 
         foreach ($budgets as $budget) {
             $used = Transaction::where('category_id', $budget->category_id)
@@ -34,7 +34,8 @@ class BudgetController extends Controller
 
     public function store(StoreBudgetRequest $request)
     {
-        $exists = Budget::where('category_id', $request->category_id)
+        $exists = Budget::where('user_id', auth()->id())
+            ->where('category_id', $request->category_id)
             ->where('month', $request->month)
             ->where('year', $request->year)
             ->exists();

@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderByRaw("
+        $categories = Category::where('user_id', auth()->id())->orderByRaw("
         CASE 
             WHEN type = 'income' THEN 1
             WHEN type = 'expense' THEN 2
@@ -45,16 +45,18 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show($id)
     {
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
         if ($category->is_system) {
             return redirect()->route('categories.index')->with('error', 'System categories cannot be edited.');
         }
@@ -66,8 +68,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, $id)
     {
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
         $category->update($request->validated());
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
@@ -76,8 +79,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
         if ($category->is_system) {
             return redirect()->route('categories.index')->with('error', 'System categories cannot be deleted.');
         }

@@ -13,7 +13,7 @@ class WalletController extends Controller
      */
     public function index()
     {
-        $wallets = Wallet::withSum(['transactions as income' => function ($q) {
+        $wallets = Wallet::where('user_id', auth()->id())->withSum(['transactions as income' => function ($q) {
             $q->whereHas('category', fn($q) => $q->where('type', 'income'));
         }], 'amount')
         ->withSum(['transactions as expense' => function ($q) {
@@ -74,24 +74,27 @@ class WalletController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Wallet $wallet)
+    public function show($id)
     {
+        $wallet = Wallet::where('user_id', auth()->id())->findOrFail($id);
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Wallet $wallet)
+    public function edit($id)
     {
+        $wallet = Wallet::where('user_id', auth()->id())->findOrFail($id);
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWalletRequest $request, Wallet $wallet)
+    public function update(UpdateWalletRequest $request, $id)
     {
+        $wallet = Wallet::where('user_id', auth()->id())->findOrFail($id);
         $wallet->update($request->only('name','type'));
         return redirect()->route('wallets.index')->with('success', 'Wallet updated successfully.');
     }
@@ -99,8 +102,9 @@ class WalletController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Wallet $wallet)
+    public function destroy($id)
     {
+        $wallet = Wallet::where('user_id', auth()->id())->findOrFail($id);
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }

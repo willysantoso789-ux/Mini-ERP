@@ -14,9 +14,10 @@ class WalletTransferController extends Controller
 {
     public function index()
     {
-        $wallets = Wallet::all();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
         
-        $transfers = Transaction::with(['wallet', 'category'])
+        $transfers = Transaction::where('user_id', auth()->id())
+            ->with(['wallet', 'category'])
             ->whereHas('category', function ($q) {
                 $q->whereIn('name', ['Transfer Out', 'Transfer In'])->where('is_system', true);
             })

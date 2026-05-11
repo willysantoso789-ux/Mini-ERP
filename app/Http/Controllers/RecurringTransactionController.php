@@ -12,9 +12,9 @@ class RecurringTransactionController extends Controller
 {
     public function index()
     {
-        $recurringTransactions = RecurringTransaction::with(['wallet', 'category'])->latest()->get();
-        $wallets = Wallet::all();
-        $categories = Category::where('is_system', false)->get();
+        $recurringTransactions = RecurringTransaction::where('user_id', auth()->id())->with(['wallet', 'category'])->latest()->get();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
+        $categories = Category::where('user_id', auth()->id())->where('is_system', false)->get();
 
         return view('recurring-transactions.index', compact('recurringTransactions', 'wallets', 'categories'));
     }
@@ -37,8 +37,9 @@ class RecurringTransactionController extends Controller
             ->with('success', 'Recurring transaction created successfully.');
     }
     
-    public function destroy(RecurringTransaction $recurringTransaction)
+    public function destroy($id)
     {
+        $recurringTransaction = RecurringTransaction::where('user_id', auth()->id())->findOrFail($id);
         $recurringTransaction->delete();
         return redirect()->route('recurring-transactions.index')
             ->with('success', 'Recurring transaction deleted successfully.');

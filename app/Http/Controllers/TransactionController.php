@@ -16,7 +16,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Transaction::with(['category','wallet']);
+        $query = Transaction::where('user_id', auth()->id())->with(['category','wallet']);
 
         if (request('search')) {
             $query->where('description', 'like', '%' . request('search') . '%');
@@ -52,8 +52,8 @@ class TransactionController extends Controller
 
         $transactions = $query->latest()->paginate(10);
 
-        $categories = Category::all();
-        $wallets = Wallet::all();
+        $categories = Category::where('user_id', auth()->id())->get();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
 
         return view('transaction.index', compact('transactions','categories','wallets'));
     }
@@ -64,8 +64,8 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
         $type = $request->type; // income / expense
-        $categories = Category::where('is_system', false)->where('type', $type)->get();
-        $wallets = Wallet::all();
+        $categories = Category::where('user_id', auth()->id())->where('is_system', false)->where('type', $type)->get();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
 
         //kalau salah satu kosong → block
         if ($categories->isEmpty() || $wallets->isEmpty()) {
@@ -98,18 +98,20 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show($id)
     {
+        $transaction = Transaction::where('user_id', auth()->id())->findOrFail($id);
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transaction $transaction)
+    public function edit($id)
     {
-        $categories = Category::where('is_system', false)->where('type', $transaction->category->type)->get();
-        $wallets = Wallet::all();
+        $transaction = Transaction::where('user_id', auth()->id())->findOrFail($id);
+        $categories = Category::where('user_id', auth()->id())->where('is_system', false)->where('type', $transaction->category->type)->get();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
 
         //BLOCK kalau category transaction adalah system
         if ($transaction->category && $transaction->category->is_system) {
@@ -123,8 +125,9 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction)
+    public function update(UpdateTransactionRequest $request, $id)
     {
+        $transaction = Transaction::where('user_id', auth()->id())->findOrFail($id);
         $data = $request->validated();
 
         $category = Category::findOrFail($data['category_id']);
@@ -148,8 +151,9 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
+        $transaction = Transaction::where('user_id', auth()->id())->findOrFail($id);
         //BLOCK kalau category transaction adalah system
         if ($transaction->category && $transaction->category->is_system) {
             return redirect()->route('transactions.index')

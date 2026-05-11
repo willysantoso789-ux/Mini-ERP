@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRecurringTransactionRequest extends FormRequest
 {
@@ -22,8 +23,8 @@ class StoreRecurringTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'wallet_id' => 'required|exists:wallets,id',
-            'category_id' => 'required|exists:categories,id',
+            'wallet_id' => ['required', Rule::exists('wallets', 'id')->where('user_id', auth()->id())],
+            'category_id' => ['required', Rule::exists('categories', 'id')->where('user_id', auth()->id())],
             'amount' => 'required|numeric|min:1',
             'frequency' => 'required|in:daily,weekly,monthly',
             'next_processing_date' => 'required|date|after_or_equal:today',

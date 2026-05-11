@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SaveToDreamRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class SaveToDreamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'wallet_id' => 'required|exists:wallets,id',
+            'wallet_id' => ['required', Rule::exists('wallets', 'id')->where('user_id', auth()->id())],
             'amount' => 'required|numeric|min:0.01',
         ];
     }

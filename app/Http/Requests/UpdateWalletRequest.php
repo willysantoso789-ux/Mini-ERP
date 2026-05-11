@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateWalletRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateWalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', Rule::unique('wallets')->where('user_id', auth()->id())->ignore($this->route('wallet'))],
             'type' => 'required|in:cash,bank,ewallet,other',
         ];
     }

@@ -16,7 +16,7 @@ class DreamController extends Controller
 {
     public function index()
     {
-        $dreams = Dream::with(['transactions'])->get()->map(function ($dream) {
+        $dreams = Dream::where('user_id', auth()->id())->with(['transactions'])->get()->map(function ($dream) {
             $progress = $dream->transactions->sum('amount');
             $dream->progress = $progress;
             $dream->percentage = $dream->target_amount > 0 ? min(100, ($progress / $dream->target_amount) * 100) : 0;
@@ -24,7 +24,7 @@ class DreamController extends Controller
             return $dream;
         });
 
-        $wallets = Wallet::all();
+        $wallets = Wallet::where('user_id', auth()->id())->get();
 
         return view('dreams.index', compact('dreams', 'wallets'));
     }
@@ -35,8 +35,9 @@ class DreamController extends Controller
         return redirect()->route('dreams.index')->with('success', 'Dream created successfully!');
     }
 
-    public function addSaving(SaveToDreamRequest $request, Dream $dream)
+    public function addSaving(SaveToDreamRequest $request, $id)
     {
+        $dream = Dream::where('user_id', auth()->id())->findOrFail($id);
         $wallet = Wallet::findOrFail($request->wallet_id);
         if ($request->amount > $wallet->balance) {
             return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
