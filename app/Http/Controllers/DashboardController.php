@@ -10,28 +10,28 @@ class DashboardController extends Controller
     public function index()
     {
         //stats card
-        $income = Transaction::whereHas('category', function ($q) {
+        $income = Transaction::where('user_id', auth()->id())->whereHas('category', function ($q) {
             $q->where('type', 'income')
             ->where('is_system', false);
         })->sum('amount');
 
-        $expense = Transaction::whereHas('category', function ($q) {
+        $expense = Transaction::where('user_id', auth()->id())->whereHas('category', function ($q) {
             $q->where('type', 'expense')
             ->where('is_system', false);
         })->sum('amount');
 
-        $totalIncomeAll = Transaction::whereHas('category', fn($q) =>
+        $totalIncomeAll = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
             $q->where('type', 'income')
         )->sum('amount');
 
-        $totalExpenseAll = Transaction::whereHas('category', fn($q) =>
+        $totalExpenseAll = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
             $q->where('type', 'expense')
         )->sum('amount');
 
         $balance = $totalIncomeAll - $totalExpenseAll;
 
         //financial insight card
-        $topExpense = Transaction::whereHas('category', fn($q) =>
+        $topExpense = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
                 $q->where('type','expense')
                 ->where('is_system', false)
             )
@@ -43,7 +43,7 @@ class DashboardController extends Controller
 
         $topExpenseCategory = $topExpense->category->name ?? null;
 
-        $topIncome = Transaction::whereHas('category', fn($q) =>
+        $topIncome = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
                 $q->where('type','income')
                 ->where('is_system', false)
             )
@@ -55,7 +55,7 @@ class DashboardController extends Controller
 
         $topIncomeCategory = $topIncome->category->name ?? null;
 
-        $mostExpense = Transaction::whereHas('category', fn($q) =>
+        $mostExpense = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
                 $q->where('type','expense')
                 ->where('is_system', false)
             )
@@ -68,7 +68,7 @@ class DashboardController extends Controller
 
         //income vs expense chart
         // Get available years for the chart
-        $availableChartYears = Transaction::selectRaw('YEAR(transaction_date) as year')
+        $availableChartYears = Transaction::where('user_id', auth()->id())->selectRaw('YEAR(transaction_date) as year')
             ->distinct()
             ->orderByDesc('year')
             ->pluck('year');
@@ -77,7 +77,7 @@ class DashboardController extends Controller
         $selectedChartYear = request('chart_year', $latestYear);
 
         // ambil data income per bulan
-        $incomeMonthly = Transaction::whereHas('category', fn($q) =>
+        $incomeMonthly = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
                 $q->where('type','income')
                 ->where('is_system', false)
             )
@@ -87,7 +87,7 @@ class DashboardController extends Controller
             ->pluck('total','month');
 
         // ambil data expense per bulan
-        $expenseMonthly = Transaction::whereHas('category', fn($q) =>
+        $expenseMonthly = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
                 $q->where('type','expense')
                 ->where('is_system', false)
             )
@@ -109,7 +109,7 @@ class DashboardController extends Controller
         //expense by category chart
         $selectedMonth = request('month');
 
-        $query = Transaction::whereHas('category', fn($q) =>
+        $query = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
             $q->where('type','expense')
             ->where('is_system', false)
         )->with('category');
@@ -132,7 +132,7 @@ class DashboardController extends Controller
         //income by category chart
         $selectedIncomeMonth = request('month_income');
 
-        $query = Transaction::whereHas('category', fn($q) =>
+        $query = Transaction::where('user_id', auth()->id())->whereHas('category', fn($q) =>
             $q->where('type','income')
             ->where('is_system', false)
         )->with('category');
@@ -153,7 +153,8 @@ class DashboardController extends Controller
         $incomeCategoryData = $incomeCategoryStats->pluck('total');
 
         // balance trend
-        $transactionsPerMonth = Transaction::join('categories', 'transactions.category_id', '=', 'categories.id')
+        $transactionsPerMonth = Transaction::where('transactions.user_id', auth()->id())
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
             ->selectRaw("
                 YEAR(transaction_date) as year,
                 MONTH(transaction_date) as month,
@@ -223,7 +224,7 @@ class DashboardController extends Controller
         }
 
         //recent transactions
-        $recentIncome = Transaction::with('category')
+        $recentIncome = Transaction::where('user_id', auth()->id())->with('category')
             ->whereHas('category', fn($q) => 
                 $q->where('type','income')
                 ->where('is_system', false)
@@ -232,7 +233,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $recentExpense = Transaction::with('category')
+        $recentExpense = Transaction::where('user_id', auth()->id())->with('category')
             ->whereHas('category', fn($q) => 
                 $q->where('type','expense')
                 ->where('is_system', false)

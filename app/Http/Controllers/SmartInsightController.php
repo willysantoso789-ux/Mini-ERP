@@ -9,7 +9,7 @@ class SmartInsightController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::whereHas('category', function($q) {
+        $transactions = Transaction::where('user_id', auth()->id())->whereHas('category', function($q) {
             $q->where('is_system', false);
         })->get();
 
@@ -33,7 +33,7 @@ class SmartInsightController extends Controller
             }
         }
 
-        $topExpenseCategory = Transaction::whereHas('category', function($q) {
+        $topExpenseCategory = Transaction::where('user_id', auth()->id())->whereHas('category', function($q) {
             $q->where('is_system', false)->where('type', 'expense');
         })->selectRaw('category_id, sum(amount) as total')
         ->groupBy('category_id')

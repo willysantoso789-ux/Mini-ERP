@@ -13,20 +13,20 @@ class FinancialHealthController extends Controller
         $selectedMonth = $request->input('month', date('n'));
         $selectedYear = $request->input('year', date('Y'));
 
-        $income = Transaction::whereMonth('transaction_date', $selectedMonth)
+        $income = Transaction::where('user_id', auth()->id())->whereMonth('transaction_date', $selectedMonth)
             ->whereYear('transaction_date', $selectedYear)
             ->whereHas('category', function ($q) {
                 $q->where('type', 'income')->where('is_system', false);
             })->sum('amount');
 
-        $expense = Transaction::whereMonth('transaction_date', $selectedMonth)
+        $expense = Transaction::where('user_id', auth()->id())->whereMonth('transaction_date', $selectedMonth)
             ->whereYear('transaction_date', $selectedYear)
             ->whereHas('category', function ($q) {
                 $q->where('type', 'expense')->where('is_system', false);
             })->sum('amount');
 
         // Fetch available months and years from transactions for the dropdown
-        $availableDates = Transaction::whereHas('category', function ($q) {
+        $availableDates = Transaction::where('user_id', auth()->id())->whereHas('category', function ($q) {
             $q->where('is_system', false);
         })->selectRaw('YEAR(transaction_date) as year, MONTH(transaction_date) as month')
           ->distinct()
