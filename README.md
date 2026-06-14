@@ -13,7 +13,7 @@
 * **📂 Category Management**: Organize transactions by income and expense categories with intuitive icons. Includes system-protected categories for internal transfers.
 * **💸 Transaction Tracking**: Record daily incomes and expenses. Securely attach receipt proofs to transactions (stored in private local storage and served via authorized routes).
 * **📈 Interactive Dashboard**: Visual representation of financial data using charts, providing a clear overview of Income vs. Expense and Category breakdowns.
-* **📊 Reporting Module**: Export transaction data to professional **PDF** and **Excel** formats using date range filters.
+* **📊 Reporting Module**: Export transaction data to professional **PDF** format using date range filters.
 * **🎯 Budgeting**: Set monthly budgets per category to control spending habits.
 * **💭 Dream Planner**: Goal-based savings tracker to help achieve long-term financial dreams.
 * **🔄 Recurring Transactions**: Automate regular payments (subscriptions, bills) using scheduled jobs.
@@ -118,7 +118,6 @@ The Dashboard acts as the central hub. It aggregates data from all modules to di
 The Reporting module provides robust data export capabilities strictly scoped to the user's transactions:
 - **Filters:** Start Date and End Date.
 - **PDF Export:** Generates a professional, print-ready A4 document containing a summary (Total Income, Expense, Net Balance) and a detailed transaction table. Handles pagination automatically.
-- **Excel Export:** Generates a clean spreadsheet with auto-sized columns and proper headers, perfect for further spreadsheet analysis.
 
 ---
 

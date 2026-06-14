@@ -2,41 +2,79 @@
 
 namespace App\Exports;
 
-use App\Models\Transaction;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Facades\Excel;
 
-class TransactionsExport implements FromView, ShouldAutoSize
+class TransactionsExport
 {
-    protected $startDate;
-    protected $endDate;
+    protected $transactions;
+    protected $totalIncome;
+    protected $totalExpense;
+    protected $netBalance;
 
-    public function __construct($startDate, $endDate)
-    {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+    public function __construct(
+        $transactions,
+        $totalIncome,
+        $totalExpense,
+        $netBalance
+    ) {
+        $this->transactions = $transactions;
+        $this->totalIncome = $totalIncome;
+        $this->totalExpense = $totalExpense;
+        $this->netBalance = $netBalance;
     }
 
-    public function view(): View
+    public function download()
     {
-        $transactions = Transaction::where('user_id', auth()->id())
-            ->whereBetween('transaction_date', [$this->startDate, $this->endDate])
-            ->with(['category', 'wallet'])
-            ->orderBy('transaction_date', 'asc')
-            ->get();
+        $transactions = $this->transactions;
+        $totalIncome = $this->totalIncome;
+        $totalExpense = $this->totalExpense;
+        $netBalance = $this->netBalance;
 
-        $totalIncome = $transactions->where('category.type', 'income')->sum('amount');
-        $totalExpense = $transactions->where('category.type', 'expense')->sum('amount');
-        $netBalance = $totalIncome - $totalExpense;
+        $data = [];
 
-        return view('report.excel', [
-            'transactions' => $transactions,
-            'totalIncome' => $totalIncome,
-            'totalExpense' => $totalExpense,
-            'netBalance' => $netBalance,
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
-        ]);
+        foreach ($transactions as $trx) {
+
+            $data[] = [
+                'Date' => $trx->transaction_date,
+                'Description' => $trx->description,
+                'Wallet' => $trx->wallet?->name,
+                'Category' => $trx->category?->name,
+                'Type' => ucfirst($trx->category?->type ?? '-'),
+                'Amount' => $trx->amount,
+            ];
+        }
+
+        $data[] = [];
+
+        $data[] = [
+            'Total Income',
+            $totalIncome
+        ];
+
+        $data[] = [
+            'Total Expense',
+            $totalExpense
+        ];
+
+        $data[] = [
+            'Net Balance',
+            $netBalance
+        ];
+
+        return Excel::create(
+            'transaction-report-' . now()->format('Ymd-His'),
+            function ($excel) use ($data) {
+
+                $excel->sheet(
+                    'Transactions',
+                    function ($sheet) use ($data) {
+
+                        $sheet->fromArray($data);
+
+                        $sheet->setAutoSize(true);
+                    }
+                );
+            }
+        )->download('xlsx');
     }
 }

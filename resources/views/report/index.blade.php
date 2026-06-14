@@ -32,12 +32,8 @@
             </div>
 
             <div class="pt-4 flex gap-4">
-                <button type="submit" name="format" value="pdf" class="flex-1 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200 flex justify-center items-center gap-2">
+                <button type="submit" name="format" value="pdf" class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-200 flex justify-center items-center gap-2">
                     <i class="fas fa-file-pdf"></i> Export PDF
-                </button>
-
-                <button type="submit" name="format" value="excel" class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-200 flex justify-center items-center gap-2">
-                    <i class="fas fa-file-excel"></i> Export Excel
                 </button>
             </div>
         </form>
