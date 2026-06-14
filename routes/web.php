@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
         return view('categories');
     })->name('categories');
 
+    Route::get('transactions/{transaction}/receipt', [\App\Http\Controllers\TransactionController::class, 'showReceipt'])->name('transactions.receipt');
     Route::resource('transactions', \App\Http\Controllers\TransactionController::class);
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
     Route::resource('wallets', \App\Http\Controllers\WalletController::class);

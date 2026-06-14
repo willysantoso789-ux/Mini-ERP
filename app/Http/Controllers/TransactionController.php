@@ -92,8 +92,8 @@ class TransactionController extends Controller
             }
         }
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('transactions', 'public');
+        if ($request->hasFile('receipt')) {
+            $data['receipt'] = $request->file('receipt')->store('receipts', 'local');
         }
 
         Transaction::create($data);
@@ -149,11 +149,11 @@ class TransactionController extends Controller
             }
         }
 
-        if ($request->hasFile('image')) {
-            if ($transaction->image) {
-                Storage::disk('public')->delete($transaction->image);
+        if ($request->hasFile('receipt')) {
+            if ($transaction->receipt) {
+                Storage::disk('local')->delete($transaction->receipt);
             }
-            $data['image'] = $request->file('image')->store('transactions', 'public');
+            $data['receipt'] = $request->file('receipt')->store('receipts', 'local');
         }
 
         $transaction->update($data);
@@ -172,11 +172,23 @@ class TransactionController extends Controller
                 ->with('error', 'System transaction cannot be deleted');
         }
         
-        if ($transaction->image) {
-            Storage::disk('public')->delete($transaction->image);
+        if ($transaction->receipt) {
+            Storage::disk('local')->delete($transaction->receipt);
         }
         
         $transaction->delete();
         return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
+    }
+
+    /**
+     * Display the receipt image securely
+     */
+    public function showReceipt(Transaction $transaction)
+    {
+        if ($transaction->user_id !== auth()->id() || !$transaction->receipt) {
+            abort(404);
+        }
+
+        return response()->file(Storage::disk('local')->path($transaction->receipt));
     }
 }

@@ -11,7 +11,7 @@
 * **🔐 Multi-User Authentication**: Complete data isolation. Every query and model is strictly scoped to the authenticated user using global scopes (`auth()->id()`).
 * **💰 Wallet Management**: Manage multiple wallets (Cash, Bank Accounts, E-Wallets) with real-time balance tracking.
 * **📂 Category Management**: Organize transactions by income and expense categories with intuitive icons. Includes system-protected categories for internal transfers.
-* **💸 Transaction Tracking**: Record daily incomes and expenses. Attach image proofs (receipts) to transactions.
+* **💸 Transaction Tracking**: Record daily incomes and expenses. Securely attach receipt proofs to transactions (stored in private local storage and served via authorized routes).
 * **📈 Interactive Dashboard**: Visual representation of financial data using charts, providing a clear overview of Income vs. Expense and Category breakdowns.
 * **📊 Reporting Module**: Export transaction data to professional **PDF** and **Excel** formats using date range filters.
 * **🎯 Budgeting**: Set monthly budgets per category to control spending habits.
@@ -67,11 +67,7 @@
    ```
    *Configure your `.env` file with the correct database credentials.*
 
-4. **Storage Link:**
-   ```bash
-   php artisan storage:link
-   ```
-   *Required for transaction image attachments.*
+
 
 ---
 

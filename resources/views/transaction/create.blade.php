@@ -120,12 +120,12 @@
                 @enderror
             </div>
 
-            <!-- IMAGE -->
+            <!-- RECEIPT -->
             <div>
-                <label class="block mb-1">Image (Optional)</label>
-                <input type="file" name="image" accept="image/jpeg, image/png, image/jpg, image/webp"
+                <label class="block mb-1">Receipt (Optional)</label>
+                <input type="file" name="receipt" accept="image/jpeg, image/png, image/jpg, image/webp"
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200">
-                @error('image')
+                @error('receipt')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
