@@ -31,9 +31,9 @@ class DemoDataSeeder extends Seeder
         RecurringTransaction::where('user_id', $user->id)->delete();
 
         // 1. Wallets
-        $cashWallet = Wallet::create(['user_id' => $user->id, 'name' => 'Cash', 'balance' => 5000000]);
-        $bankWallet = Wallet::create(['user_id' => $user->id, 'name' => 'BCA Account', 'balance' => 25000000]);
-        $savingsWallet = Wallet::create(['user_id' => $user->id, 'name' => 'Savings', 'balance' => 15000000]);
+        $cashWallet = Wallet::create(['user_id' => $user->id, 'name' => 'Cash', 'balance' => 3500000]);
+        $bankWallet = Wallet::create(['user_id' => $user->id, 'name' => 'BCA Account', 'balance' => 28000000]);
+        $savingsWallet = Wallet::create(['user_id' => $user->id, 'name' => 'Savings', 'balance' => 25000000]);
 
         // 2. Categories
         // Income
@@ -48,21 +48,57 @@ class DemoDataSeeder extends Seeder
         $billsCat = Category::create(['user_id' => $user->id, 'name' => 'Bills & Utilities', 'type' => 'expense', 'icon' => 'fas fa-file-invoice', 'is_system' => false]);
         $entertainmentCat = Category::create(['user_id' => $user->id, 'name' => 'Entertainment', 'type' => 'expense', 'icon' => 'fas fa-film', 'is_system' => false]);
         $transferOutCat = Category::create(['user_id' => $user->id, 'name' => 'Transfer Out', 'type' => 'expense', 'icon' => 'fas fa-arrow-up', 'is_system' => true]);
+        $dreamSavingCat = Category::create(['user_id' => $user->id, 'name' => 'Dream Saving', 'type' => 'expense', 'icon' => 'fas fa-star', 'is_system' => true]);
+
+        // 5. Dream Planner (Create these first so we can seed transactions for them)
+        $laptopDream = Dream::create([
+            'user_id' => $user->id,
+            'name' => 'New Laptop',
+            'target_amount' => 20000000,
+            'target_date' => Carbon::create(2026, 12, 1)->format('Y-m-d'),
+        ]);
+        $japanDream = Dream::create([
+            'user_id' => $user->id,
+            'name' => 'Japan Holiday',
+            'target_amount' => 35000000,
+            'target_date' => Carbon::create(2027, 4, 15)->format('Y-m-d'),
+        ]);
 
         // 3. Transactions
-        $startDate = Carbon::now()->subMonths(3)->startOfMonth();
-        $endDate = Carbon::now();
+        $startDate = Carbon::create(2026, 4, 1);
+        $endDate = Carbon::create(2026, 7, 2);
         $currentDate = clone $startDate;
 
         while ($currentDate <= $endDate) {
             // Salary per month
-            if ($currentDate->day == 25 || ($currentDate->day == $currentDate->copy()->endOfMonth()->day && $currentDate->day < 25)) {
+            if ($currentDate->day == 25) {
                 Transaction::create([
                     'user_id' => $user->id,
                     'wallet_id' => $bankWallet->id,
                     'category_id' => $salaryCat->id,
-                    'amount' => 15000000,
+                    'amount' => 18000000,
                     'description' => 'Monthly Salary',
+                    'transaction_date' => clone $currentDate,
+                ]);
+
+                // Also deposit to dreams exactly on payday
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'wallet_id' => $bankWallet->id,
+                    'category_id' => $dreamSavingCat->id,
+                    'dream_id' => $laptopDream->id,
+                    'amount' => 1500000,
+                    'description' => 'Saving for ' . $laptopDream->name,
+                    'transaction_date' => clone $currentDate,
+                ]);
+
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'wallet_id' => $bankWallet->id,
+                    'category_id' => $dreamSavingCat->id,
+                    'dream_id' => $japanDream->id,
+                    'amount' => 2500000,
+                    'description' => 'Saving for ' . $japanDream->name,
                     'transaction_date' => clone $currentDate,
                 ]);
             }
@@ -73,7 +109,7 @@ class DemoDataSeeder extends Seeder
                     'user_id' => $user->id,
                     'wallet_id' => $bankWallet->id,
                     'category_id' => $billsCat->id,
-                    'amount' => 3000000,
+                    'amount' => 4500000,
                     'description' => 'Apartment Rent',
                     'transaction_date' => clone $currentDate,
                 ]);
@@ -81,8 +117,28 @@ class DemoDataSeeder extends Seeder
                     'user_id' => $user->id,
                     'wallet_id' => $bankWallet->id,
                     'category_id' => $billsCat->id,
-                    'amount' => 500000,
+                    'amount' => 600000,
                     'description' => 'Internet & Electricity',
+                    'transaction_date' => clone $currentDate,
+                ]);
+            }
+
+            // Mid-month Bank to Cash transfer
+            if ($currentDate->day == 15) {
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'wallet_id' => $bankWallet->id,
+                    'category_id' => $transferOutCat->id,
+                    'amount' => 1500000,
+                    'description' => 'ATM Withdrawal',
+                    'transaction_date' => clone $currentDate,
+                ]);
+                Transaction::create([
+                    'user_id' => $user->id,
+                    'wallet_id' => $cashWallet->id,
+                    'category_id' => $transferInCat->id,
+                    'amount' => 1500000,
+                    'description' => 'ATM Withdrawal',
                     'transaction_date' => clone $currentDate,
                 ]);
             }
@@ -111,12 +167,12 @@ class DemoDataSeeder extends Seeder
             }
 
             // Weekend Expenses (Shopping, Entertainment)
-            if ($currentDate->isWeekend() && rand(1, 10) > 4) {
+            if ($currentDate->isWeekend() && rand(1, 10) > 6) {
                 Transaction::create([
                     'user_id' => $user->id,
                     'wallet_id' => $bankWallet->id,
                     'category_id' => rand(1, 2) == 1 ? $shoppingCat->id : $entertainmentCat->id,
-                    'amount' => rand(200000, 1000000),
+                    'amount' => rand(200000, 800000),
                     'description' => 'Weekend Outing',
                     'transaction_date' => clone $currentDate,
                 ]);
@@ -125,52 +181,50 @@ class DemoDataSeeder extends Seeder
             $currentDate->addDay();
         }
 
-        // 4. Budgets (Current Month)
-        Budget::create([
-            'user_id' => $user->id,
-            'category_id' => $foodCat->id,
-            'amount' => 3000000,
-            'month' => Carbon::now()->format('Y-m'),
-        ]);
-        Budget::create([
-            'user_id' => $user->id,
-            'category_id' => $shoppingCat->id,
-            'amount' => 1500000,
-            'month' => Carbon::now()->format('Y-m'),
-        ]);
-        Budget::create([
-            'user_id' => $user->id,
-            'category_id' => $entertainmentCat->id,
-            'amount' => 1000000,
-            'month' => Carbon::now()->format('Y-m'),
-        ]);
-
-        // 5. Dream Planner
-        Dream::create([
-            'user_id' => $user->id,
-            'name' => 'New Laptop',
-            'target_amount' => 20000000,
-            'current_amount' => 8000000,
-            'target_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
-        ]);
-        Dream::create([
-            'user_id' => $user->id,
-            'name' => 'Japan Holiday',
-            'target_amount' => 35000000,
-            'current_amount' => 15000000,
-            'target_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-        ]);
+        // 4. Budgets (For June and July)
+        $monthsToBudget = ['2026-06', '2026-07'];
+        foreach ($monthsToBudget as $monthStr) {
+            Budget::create([
+                'user_id' => $user->id,
+                'category_id' => $foodCat->id,
+                'amount' => 3500000,
+                'month' => $monthStr,
+            ]);
+            Budget::create([
+                'user_id' => $user->id,
+                'category_id' => $shoppingCat->id,
+                'amount' => 2000000,
+                'month' => $monthStr,
+            ]);
+            Budget::create([
+                'user_id' => $user->id,
+                'category_id' => $entertainmentCat->id,
+                'amount' => 1500000,
+                'month' => $monthStr,
+            ]);
+        }
 
         // 6. Recurring Transactions
         RecurringTransaction::create([
             'user_id' => $user->id,
             'wallet_id' => $bankWallet->id,
             'category_id' => $billsCat->id,
-            'amount' => 500000,
+            'amount' => 180000,
             'description' => 'Netflix & Spotify',
             'type' => 'expense',
             'frequency' => 'monthly',
-            'next_date' => Carbon::now()->addDays(5)->format('Y-m-d'),
+            'next_date' => Carbon::create(2026, 7, 5)->format('Y-m-d'),
+        ]);
+
+        RecurringTransaction::create([
+            'user_id' => $user->id,
+            'wallet_id' => $bankWallet->id,
+            'category_id' => $billsCat->id,
+            'amount' => 350000,
+            'description' => 'Gym Membership',
+            'type' => 'expense',
+            'frequency' => 'monthly',
+            'next_date' => Carbon::create(2026, 7, 10)->format('Y-m-d'),
         ]);
     }
 }
