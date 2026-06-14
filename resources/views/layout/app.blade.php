@@ -40,6 +40,8 @@
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-sync-alt mr-2"></i>Recurring</a>
                 <a href="{{ route('smart-insight.index') }}"
                     class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-lightbulb mr-2"></i>Insights</a>
+                <a href="{{ route('reports.index') }}"
+                    class="block py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200"> <i class="fas fa-file-invoice mr-2"></i>Reports</a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-4 border-t border-indigo-500 pt-4">
                     @csrf
                     <button type="submit" class="w-full text-left py-2.5 px-4 rounded hover:bg-indigo-400 hover:transition duration-200">

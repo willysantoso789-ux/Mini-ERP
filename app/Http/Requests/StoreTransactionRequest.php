@@ -28,6 +28,7 @@ class StoreTransactionRequest extends FormRequest
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'transaction_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 }

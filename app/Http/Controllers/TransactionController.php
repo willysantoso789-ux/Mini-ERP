@@ -8,6 +8,7 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
@@ -91,6 +92,10 @@ class TransactionController extends Controller
             }
         }
 
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('transactions', 'public');
+        }
+
         Transaction::create($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
     }
@@ -144,6 +149,13 @@ class TransactionController extends Controller
             }
         }
 
+        if ($request->hasFile('image')) {
+            if ($transaction->image) {
+                Storage::disk('public')->delete($transaction->image);
+            }
+            $data['image'] = $request->file('image')->store('transactions', 'public');
+        }
+
         $transaction->update($data);
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
@@ -158,6 +170,10 @@ class TransactionController extends Controller
         if ($transaction->category && $transaction->category->is_system) {
             return redirect()->route('transactions.index')
                 ->with('error', 'System transaction cannot be deleted');
+        }
+        
+        if ($transaction->image) {
+            Storage::disk('public')->delete($transaction->image);
         }
         
         $transaction->delete();

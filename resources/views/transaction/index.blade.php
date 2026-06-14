@@ -3,7 +3,7 @@
 @section('title', 'Transactions')
 
 @section('content')
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-6" x-data="{ showImageModal: false, imageUrl: '' }">
 
         <!-- HEADER -->
         <div class="flex justify-between mb-4">
@@ -168,7 +168,13 @@
                         </td>
 
                         <!-- ACTION -->
-                        <td class="py-2 flex gap-3 text-sm">
+                        <td class="py-2 flex gap-3 text-sm items-center">
+                            @if($trx->image)
+                                <button @click="imageUrl = '{{ Storage::url($trx->image) }}'; showImageModal = true" class="text-indigo-500 hover:bg-indigo-100 px-2 rounded transition duration-200 flex items-center gap-1">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            @endif
+
                             <a href="{{ route('transactions.edit', $trx->id) }}" class="text-blue-500 hover:bg-blue-100 px-2 rounded transition duration-200">
                                 Edit
                             </a>
@@ -233,6 +239,19 @@
     <!-- PAGINATION -->
     <div class="mt-4">
         {{ $transactions->appends(request()->query())->links() }}
+    </div>
+
+    <!-- IMAGE MODAL -->
+    <div x-show="showImageModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
+        <div class="bg-white p-4 rounded-lg shadow-lg max-w-2xl w-full mx-4" @click.away="showImageModal = false">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Transaction Image</h3>
+                <button @click="showImageModal = false" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div class="flex justify-center">
+                <img :src="imageUrl" alt="Transaction Image" class="max-h-[70vh] object-contain rounded">
+            </div>
+        </div>
     </div>
 
 </div>

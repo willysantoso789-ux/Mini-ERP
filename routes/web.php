@@ -44,4 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('budgets', \App\Http\Controllers\BudgetController::class)->only(['index', 'store']);
     Route::resource('recurring-transactions', \App\Http\Controllers\RecurringTransactionController::class)->only(['index', 'store', 'destroy']);
     Route::get('smart-insight', [\App\Http\Controllers\SmartInsightController::class, 'index'])->name('smart-insight.index');
+
+    Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+    Route::post('reports/export', [\App\Http\Controllers\ReportController::class, 'export'])->name('reports.export');
 });

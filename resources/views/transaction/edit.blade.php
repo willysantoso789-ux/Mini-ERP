@@ -8,7 +8,7 @@
             Edit Transaction
         </h2>
 
-        <form method="POST" action="{{ route('transactions.update', $transaction) }}" class="space-y-4">
+        <form method="POST" action="{{ route('transactions.update', $transaction) }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
 
@@ -119,6 +119,22 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('amount')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- IMAGE -->
+            <div>
+                <label class="block mb-1">Image (Optional)</label>
+                @if($transaction->image)
+                    <div class="mb-2">
+                        <img src="{{ Storage::url($transaction->image) }}" alt="Transaction Image" class="w-32 h-32 object-cover rounded border">
+                    </div>
+                @endif
+                <input type="file" name="image" accept="image/jpeg, image/png, image/jpg, image/webp"
+                    class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                <p class="text-xs text-gray-500 mt-1">Leave empty to keep the current image.</p>
+                @error('image')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

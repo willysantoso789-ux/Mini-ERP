@@ -8,7 +8,7 @@
             Create Transaction
         </h2>
 
-        <form method="POST" action="{{ route('transactions.store') }}" class="space-y-4">
+        <form method="POST" action="{{ route('transactions.store') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
 
             <!-- DATE -->
@@ -116,6 +116,16 @@
                     class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required>
                 @error('amount')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- IMAGE -->
+            <div>
+                <label class="block mb-1">Image (Optional)</label>
+                <input type="file" name="image" accept="image/jpeg, image/png, image/jpg, image/webp"
+                    class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                @error('image')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

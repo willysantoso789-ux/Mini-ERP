@@ -1,59 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Money Track (Mini-ERP)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Money Track Logo](https://via.placeholder.com/150x150.png?text=MT)
 
-## About Laravel
+**Money Track** is a comprehensive, professional-grade Personal Finance and Mini-ERP system built with Laravel. It helps users manage their personal or small-business finances with robust modules for tracking transactions, analyzing financial health, and setting long-term goals.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌟 Feature List
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **🔐 Multi-User Authentication**: Complete data isolation. Every query and model is strictly scoped to the authenticated user using global scopes (`auth()->id()`).
+* **💰 Wallet Management**: Manage multiple wallets (Cash, Bank Accounts, E-Wallets) with real-time balance tracking.
+* **📂 Category Management**: Organize transactions by income and expense categories with intuitive icons. Includes system-protected categories for internal transfers.
+* **💸 Transaction Tracking**: Record daily incomes and expenses. Attach image proofs (receipts) to transactions.
+* **📈 Interactive Dashboard**: Visual representation of financial data using charts, providing a clear overview of Income vs. Expense and Category breakdowns.
+* **📊 Reporting Module**: Export transaction data to professional **PDF** and **Excel** formats using date range filters.
+* **🎯 Budgeting**: Set monthly budgets per category to control spending habits.
+* **💭 Dream Planner**: Goal-based savings tracker to help achieve long-term financial dreams.
+* **🔄 Recurring Transactions**: Automate regular payments (subscriptions, bills) using scheduled jobs.
+* **🏥 Financial Health Score**: Analytical system that calculates the overall financial health based on income, savings, and expense ratios.
+* **💡 Smart Insights**: Contextual financial advice dynamically generated based on current balances and spending behavior.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📸 Screenshots
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Dashboard | Transactions |
+| --- | --- |
+| *(Add your dashboard screenshot here)* | *(Add your transactions screenshot here)* |
 
-## Laravel Sponsors
+| Financial Health | Reporting |
+| --- | --- |
+| *(Add your financial health screenshot here)* | *(Add your reporting screenshot here)* |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🛠 Technology Stack
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+* **Framework:** Laravel 11 (PHP 8+)
+* **Database:** MySQL / MariaDB
+* **Frontend:** Blade Templating, Tailwind CSS, Alpine.js
+* **Charts:** Chart.js
+* **PDF Generation:** Barryvdh/Laravel-DomPDF
+* **Excel Generation:** Maatwebsite/Excel
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Installation Guide
 
-## Code of Conduct
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/mini-erp.git
+   cd mini-erp
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Install dependencies:**
+   ```bash
+   composer install
+   npm install
+   npm run build
+   ```
 
-## Security Vulnerabilities
+3. **Environment Setup:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Configure your `.env` file with the correct database credentials.*
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Storage Link:**
+   ```bash
+   php artisan storage:link
+   ```
+   *Required for transaction image attachments.*
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🗄 Migration Guide
+
+Run the migrations to build the database schema:
+
+```bash
+php artisan migrate
+```
+
+---
+
+## 🌱 Seeder Guide (Demo Data)
+
+To populate the application with realistic demo data (Wallets, Categories, Transactions, Budgets, and Dreams) for presentation purposes, run:
+
+```bash
+php artisan db:seed --class=DemoDataSeeder
+```
+*Note: This will create a demo user with the email `demo@example.com` and password `password`. The generated data provides a realistic 3-month financial history ensuring meaningful dashboard charts.*
+
+---
+
+## 🛡 Authentication Overview
+
+The system utilizes Laravel's native authentication. Data isolation is strictly enforced at the database level.
+Every primary model implements a `BelongsToUser` trait that automatically applies a global scope:
+```php
+where('user_id', auth()->id())
+```
+This guarantees that users can only ever access, edit, or report on their own financial data.
+
+---
+
+## 📊 Dashboard Overview
+
+The Dashboard acts as the central hub. It aggregates data from all modules to display:
+- Total Balance across all wallets
+- Income vs Expense summary for the current month
+- Visual pie charts for Expense by Category
+- Quick access to recent transactions
+
+---
+
+## 📄 Reporting Overview
+
+The Reporting module provides robust data export capabilities strictly scoped to the user's transactions:
+- **Filters:** Start Date and End Date.
+- **PDF Export:** Generates a professional, print-ready A4 document containing a summary (Total Income, Expense, Net Balance) and a detailed transaction table. Handles pagination automatically.
+- **Excel Export:** Generates a clean spreadsheet with auto-sized columns and proper headers, perfect for further spreadsheet analysis.
+
+---
+
+## 🔮 Future Improvements
+
+- [ ] **Multi-Currency Support:** Ability to track wallets in different currencies with real-time exchange rates.
+- [ ] **Advanced Tagging:** Tagging transactions with multiple tags for granular filtering.
+- [ ] **API Layer:** RESTful API for mobile application integration.
+- [ ] **Collaborative Wallets:** Shared wallets for families or joint accounts (with permission levels).
