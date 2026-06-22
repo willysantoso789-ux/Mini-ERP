@@ -133,7 +133,7 @@
                 </p>
             @endif
 
-            <div class="relative" style="height:300px">
+            <div class="relative w-full h-[250px] sm:h-[300px] md:h-[350px]">
                 @if (count($categoryData) > 0)
                     <canvas id="categoryChart"></canvas>
                 @else
@@ -177,7 +177,7 @@
             @endif
 
             <!-- CHART -->
-            <div class="relative" style="height:300px">
+            <div class="relative w-full h-[250px] sm:h-[300px] md:h-[350px]">
                 @if (count($incomeCategoryData) > 0)
                     <canvas id="incomeCategoryChart"></canvas>
                 @else
@@ -193,7 +193,7 @@
 
     <div class="bg-white p-6 rounded-lg shadow mt-6">
         <h3 class="text-lg font-semibold mb-4">Balance Trend</h3>
-        <div style="height:500px">
+        <div class="w-full h-[300px] sm:h-[400px] md:h-[500px]">
             <canvas id="balanceChart"></canvas>
         </div>
     </div>
@@ -277,11 +277,14 @@
     </div>
 
     <script>
+        // Store chart instances for resize handling
+        let charts = {};
+
         // BAR CHART
         const financeEl = document.getElementById('financeChart');
         if (financeEl) {
             const ctx = financeEl.getContext('2d');
-            new Chart(ctx, {
+            charts.finance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: @json($monthsLabels),
@@ -302,11 +305,31 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            responsive: true,
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 11 : 12
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'Rp ' + value.toLocaleString()
+                                callback: value => 'Rp ' + value.toLocaleString(),
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 11
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 11
+                                }
                             }
                         }
                     }
@@ -319,7 +342,7 @@
         const categoryEl = document.getElementById('categoryChart');
         if (categoryEl && @json(count($categoryData)) > 0) {
             const categoryCtx = categoryEl.getContext('2d');
-            new Chart(categoryCtx, {
+            charts.category = new Chart(categoryCtx, {
                 type: 'doughnut',
                 data: {
                     labels: @json($categoryLabels),
@@ -339,7 +362,13 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 12
+                                },
+                                padding: window.innerWidth < 640 ? 8 : 15
+                            }
                         }
                     }
                 }
@@ -350,7 +379,7 @@
         const incomeCategoryEl = document.getElementById('incomeCategoryChart');
         if (incomeCategoryEl && @json(count($incomeCategoryData) > 0)) {
             const incomeCategoryCtx = incomeCategoryEl.getContext('2d');
-            new Chart(incomeCategoryCtx, {
+            charts.incomeCategory = new Chart(incomeCategoryCtx, {
                 type: 'doughnut',
                 data: {
                     labels: @json($incomeCategoryLabels),
@@ -370,7 +399,13 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 12
+                                },
+                                padding: window.innerWidth < 640 ? 8 : 15
+                            }
                         }
                     }
                 }
@@ -381,7 +416,7 @@
         const balanceEl = document.getElementById('balanceChart');
         if (balanceEl) {
             const balanceCtx = balanceEl.getContext('2d');
-            new Chart(balanceCtx, {
+            charts.balance = new Chart(balanceCtx, {
                 type: 'line',
                 data: {
                     labels: @json($trendMonths),
@@ -398,17 +433,48 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 12
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'Rp ' + value.toLocaleString()
+                                callback: value => 'Rp ' + value.toLocaleString(),
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 11
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: window.innerWidth < 640 ? 10 : 11
+                                }
                             }
                         }
                     }
-                },
-                
+                }
             });
         }
+
+        // Handle window resize to redraw charts
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                Object.values(charts).forEach(chart => {
+                    if (chart) {
+                        chart.resize();
+                    }
+                });
+            }, 100);
+        });
     </script>
 @endsection
