@@ -3,8 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="p-6 flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold mb-4">Money Track Dashboard</h1>
+    <div class="p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+        <h1 class="text-3xl font-bold mb-4 sm:mb-0">Money Track Dashboard</h1>
         <div class="flex items-center space-x-3">
             <span class="text-gray-700">Hello {{ auth()->user()->name ?? 'User' }}</span>
             <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name ?? 'User' }}&background=random" class="w-10 h-10 rounded-full">
@@ -68,7 +68,7 @@
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow mt-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4 sm:gap-0">
             <h3 class="text-lg font-semibold">Income vs Expense</h3>
             <form method="GET" class="flex gap-2">
                 <input type="hidden" name="month" value="{{ request('month') }}">
@@ -90,7 +90,9 @@
                 </button>
             </form>
         </div>
-        <canvas id="financeChart"></canvas>
+        <div class="relative w-full h-[300px] sm:h-[400px]">
+            <canvas id="financeChart"></canvas>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -203,31 +205,33 @@
             <div class="bg-white p-4 rounded-lg shadow">
                 <h3 class="text-green-600 font-semibold mb-3">Income</h3>
                 @if ($recentIncome->count())
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr>
-                                <th class="border-b py-2">Date</th>
-                                <th class="border-b py-2">Category</th>
-                                <th class="border-b py-2 text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($recentIncome as $item)
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm min-w-[300px]">
+                            <thead>
                                 <tr>
-                                    <td class="py-2 text-center">
-                                        {{ \Carbon\Carbon::parse($item->transaction_date)->format('d M Y') }}
-                                    </td>
-                                    <td class="text-center">
-                                        {{ $item->category->icon ?? '' }}
-                                        {{ $item->category->name }}
-                                    </td>
-                                    <td class="text-right text-green-500">
-                                        +Rp {{ number_format($item->amount) }}
-                                    </td>
+                                    <th class="border-b py-2 text-left">Date</th>
+                                    <th class="border-b py-2 text-left">Category</th>
+                                    <th class="border-b py-2 text-right">Amount</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($recentIncome as $item)
+                                    <tr>
+                                        <td class="py-2 text-left whitespace-nowrap">
+                                            {{ \Carbon\Carbon::parse($item->transaction_date)->format('d M Y') }}
+                                        </td>
+                                        <td class="text-left whitespace-nowrap">
+                                            {{ $item->category->icon ?? '' }}
+                                            {{ $item->category->name }}
+                                        </td>
+                                        <td class="text-right text-green-500 whitespace-nowrap">
+                                            +Rp {{ number_format($item->amount) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @else
                     <p class="text-gray-400 text-center">Belum ada income</p>
                 @endif
@@ -238,31 +242,33 @@
                 <h3 class="text-red-600 font-semibold mb-3">Expense</h3>
 
                 @if ($recentExpense->count())
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr>
-                                <th class="border-b py-2">Date</th>
-                                <th class="border-b py-2">Category</th>
-                                <th class="border-b py-2 text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($recentExpense as $item)
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm min-w-[300px]">
+                            <thead>
                                 <tr>
-                                    <td class="py-2 text-center">
-                                        {{ \Carbon\Carbon::parse($item->transaction_date)->format('d M Y') }}
-                                    </td>
-                                    <td class="text-center">
-                                        {{ $item->category->icon ?? '' }}
-                                        {{ $item->category->name }}
-                                    </td>
-                                    <td class="text-right text-red-500">
-                                        -Rp {{ number_format($item->amount) }}
-                                    </td>
+                                    <th class="border-b py-2 text-left">Date</th>
+                                    <th class="border-b py-2 text-left">Category</th>
+                                    <th class="border-b py-2 text-right">Amount</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($recentExpense as $item)
+                                    <tr>
+                                        <td class="py-2 text-left whitespace-nowrap">
+                                            {{ \Carbon\Carbon::parse($item->transaction_date)->format('d M Y') }}
+                                        </td>
+                                        <td class="text-left whitespace-nowrap">
+                                            {{ $item->category->icon ?? '' }}
+                                            {{ $item->category->name }}
+                                        </td>
+                                        <td class="text-right text-red-500 whitespace-nowrap">
+                                            -Rp {{ number_format($item->amount) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @else
                     <p class="text-gray-400 text-center">Belum ada expense</p>
                 @endif
@@ -295,6 +301,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,

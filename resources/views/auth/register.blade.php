@@ -38,8 +38,8 @@
             <input type="password" name="password_confirmation" id="password_confirmation" required class="w-full border-gray-300 border rounded px-3 py-2 focus:outline-none focus:ring focus:border-indigo-300 transition duration-300">
         </div>
 
-        <div class="flex items-center justify-between mb-4">
-            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 focus:outline-none transition duration-300">
+        <div class="flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-0 mb-4">
+            <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 focus:outline-none transition duration-300">
                 Register
             </button>
             <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Already have an account?</a>

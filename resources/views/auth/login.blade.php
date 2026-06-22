@@ -25,8 +25,8 @@
             @enderror
         </div>
 
-        <div class="flex items-center justify-between mb-4">
-            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 focus:outline-none transition duration-300">
+        <div class="flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-0 mb-4">
+            <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 focus:outline-none transition duration-300">
                 Login
             </button>
             <a href="{{ route('register') }}" class="text-indigo-600 hover:underline transition duration-300">Create an account</a>

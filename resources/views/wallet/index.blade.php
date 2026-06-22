@@ -6,11 +6,11 @@
     <div x-data="walletModal()" @keydown.escape.window="close()" class="p-6">
 
         <!-- HEADER -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
             <h1 class="text-2xl font-bold">My Wallets</h1>
 
             <button @click="openCreate()"
-                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition hover:scale-[1.02]">
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition hover:scale-[1.02] w-full sm:w-auto">
                 + Add Wallet
             </button>
         </div>

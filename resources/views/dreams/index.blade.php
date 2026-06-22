@@ -4,9 +4,9 @@
 
 @section('content')
 <div x-data="{ showModal: {{ ($errors->has('name') || $errors->has('target_amount') || $errors->has('deadline')) ? 'true' : 'false' }} }">
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <h1 class="text-2xl font-bold">Dream Planner</h1>
-        <button @click="showModal = true" class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold">
+        <button @click="showModal = true" class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold w-full sm:w-auto">
             Create Dream
         </button>
     </div>
@@ -51,8 +51,8 @@
             @if($dream->percentage < 100)
             <form action="{{ route('dreams.savings.store', $dream->id) }}" method="POST" class="mt-4 pt-4 border-t border-gray-100">
                 @csrf
-                <div class="flex gap-3 items-end">
-                    <div class="flex-1">
+                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-end w-full">
+                    <div class="flex-1 w-full">
                         <label class="block text-xs font-medium text-gray-600 mb-1">From Wallet</label>
                         <select name="wallet_id" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm py-2 px-3 text-sm transition-all">
                             <option value="">Select Wallet</option>
@@ -64,14 +64,14 @@
                             <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 w-full">
                         <label class="block text-xs font-medium text-gray-600 mb-1">Amount</label>
                         <input type="number" step="0.01" min="0.01" name="amount" required class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm py-2 px-3 text-sm transition-all" placeholder="0.00">
                         @error('amount')
                             <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 text-sm font-bold">
+                    <button type="submit" class="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 text-sm font-bold">
                         Add
                     </button>
                 </div>
@@ -101,7 +101,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 scale-100 translate-y-0"
              x-transition:leave-end="opacity-0 scale-90 translate-y-4"
-             class="bg-white p-6 rounded-lg shadow-xl w-96 relative z-10 transform">
+             class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm mx-4 relative z-10 transform">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">New Dream</h2>
                 <button @click="showModal = false" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>

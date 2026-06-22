@@ -29,17 +29,17 @@
             <div class="flex flex-wrap gap-3 items-end">
 
                 <!-- SEARCH -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">Search</label>
                     <input type="text" name="search" placeholder="Search..."
                         value="{{ request('search') }}"
-                        class="border p-2 rounded w-[180px]">
+                        class="border p-2 rounded w-full sm:w-[180px]">
                 </div>
 
                 <!-- TYPE -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">Type</label>
-                    <select name="type" id="type" class="border p-2 rounded w-[140px]">
+                    <select name="type" id="type" class="border p-2 rounded w-full sm:w-[140px]">
                         <option value="">All</option>
                         <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Income</option>
                         <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
@@ -47,9 +47,9 @@
                 </div>
 
                 <!-- CATEGORY -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">Category</label>
-                    <select name="category" id="category" class="border p-2 rounded w-[180px]">
+                    <select name="category" id="category" class="border p-2 rounded w-full sm:w-[180px]">
                         <option value="">All</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
@@ -60,9 +60,9 @@
                 </div>
 
                 <!-- WALLET -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">Wallet</label>
-                    <select name="wallet" class="border p-2 rounded w-[160px]">
+                    <select name="wallet" class="border p-2 rounded w-full sm:w-[160px]">
                         <option value="">All</option>
                         @foreach ($wallets as $wallet)
                             <option value="{{ $wallet->id }}" {{ request('wallet') == $wallet->id ? 'selected' : '' }}>
@@ -73,29 +73,29 @@
                 </div>
 
                 <!-- FROM -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">From</label>
                     <input type="date" name="start_date"
                         value="{{ request('start_date') }}"
-                        class="border p-2 rounded w-[150px]">
+                        class="border p-2 rounded w-full sm:w-[150px]">
                 </div>
 
                 <!-- TO -->
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full sm:w-auto">
                     <label class="text-xs text-gray-500 mb-1">To</label>
                     <input type="date" name="end_date"
                         value="{{ request('end_date') }}"
-                        class="border p-2 rounded w-[150px]">
+                        class="border p-2 rounded w-full sm:w-[150px]">
                 </div>
 
                 <!-- ACTION -->
-                <div class="flex gap-2">
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 w-full sm:w-auto">
                         Apply
                     </button>
 
                     <a href="{{ route('transactions.index') }}"
-                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
+                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200 w-full sm:w-auto text-center">
                         Reset
                     </a>
                 </div>
@@ -113,128 +113,130 @@
         @endif
 
         <!-- TABLE -->
-        <table class="w-full text-left">
-            <thead>
-                <tr class="border-b">
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Wallet</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @forelse ($transactions as $trx)
-                    @php
-                        $isIncome = $trx->category->type === 'income';
-                    @endphp
-
-                    <tr class="border-b hover:bg-gray-50 transition">
-
-                        <!-- DATE -->
-                        <td class="py-2">
-                            {{ \Carbon\Carbon::parse($trx->transaction_date)->format('d M Y') }}
-                        </td>
-
-                        <!-- DESC -->
-                        <td class="py-2">
-                            {{ $trx->description }}
-                        </td>
-
-                        <!-- WALLET -->
-                        <td class="py-2">
-                            {{ $trx->wallet->name }}
-                        </td>
-
-                        <!-- CATEGORY (INDICATOR WARNA) -->
-                        <td class="py-2">
-                            <span
-                                class="px-2 py-1 rounded text-sm 
-                            {{ $isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-
-                                {{ $trx->category->name }}
-                            </span>
-                        </td>
-
-                        <!-- AMOUNT -->
-                        <td
-                            class="py-2 font-semibold 
-                        {{ $isIncome ? 'text-green-600' : 'text-red-600' }}">
-
-                            {{ $isIncome ? '+' : '-' }}
-                            Rp {{ number_format($trx->amount, 0, ',', '.') }}
-                        </td>
-
-                        <!-- ACTION -->
-                        <td class="py-2 flex gap-3 text-sm items-center">
-                            @if($trx->receipt)
-                                <button @click="imageUrl = '{{ route('transactions.receipt', $trx->id) }}'; showImageModal = true" class="text-indigo-500 hover:bg-indigo-100 px-2 rounded transition duration-200 flex items-center gap-1">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                            @endif
-
-                            <a href="{{ route('transactions.edit', $trx->id) }}" class="text-blue-500 hover:bg-blue-100 px-2 rounded transition duration-200">
-                                Edit
-                            </a>
-
-                            <form method="POST" action="{{ route('transactions.destroy', $trx->id) }}"
-                                onsubmit="return confirm('Delete this transaction?');">
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="text-red-500 hover:bg-red-100 px-2 rounded transition duration-200">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-
+        <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[800px]">
+                <thead>
+                    <tr class="border-b">
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Wallet</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Action</th>
                     </tr>
+                </thead>
 
-                @empty
-                    <tr>
-                        <td colspan="6" class="py-10">
-                            <div class="flex flex-col items-center justify-center text-center text-gray-500">
+                <tbody>
+                    @forelse ($transactions as $trx)
+                        @php
+                            $isIncome = $trx->category->type === 'income';
+                        @endphp
 
-                                <!-- ICON -->
-                                <div class="text-4xl mb-2">
-                                    📭
-                                </div>
+                        <tr class="border-b hover:bg-gray-50 transition">
 
-                                @if (request()->hasAny(['search', 'category', 'type', 'wallet', 'date']))
-                                    <!-- FILTER KOSONG -->
-                                    <p class="font-medium">No transactions match your filter</p>
-                                    <p class="text-sm mb-3">Try adjusting your filter settings</p>
+                            <!-- DATE -->
+                            <td class="py-2">
+                                {{ \Carbon\Carbon::parse($trx->transaction_date)->format('d M Y') }}
+                            </td>
 
-                                    <a href="{{ route('transactions.index') }}"
-                                        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
-                                        Reset Filter
-                                    </a>
-                                @else
-                                    <!-- DATA BELUM ADA -->
-                                    <p class="font-medium">No transactions yet</p>
-                                    <p class="text-sm mb-3">Start by adding your first transaction 🚀</p>
+                            <!-- DESC -->
+                            <td class="py-2">
+                                {{ $trx->description }}
+                            </td>
 
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('transactions.create', ['type' => 'income']) }}"
-                                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
-                                            + Income
-                                        </a>
+                            <!-- WALLET -->
+                            <td class="py-2">
+                                {{ $trx->wallet->name }}
+                            </td>
 
-                                        <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
-                                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
-                                            + Expense
-                                        </a>
-                                    </div>
+                            <!-- CATEGORY (INDICATOR WARNA) -->
+                            <td class="py-2">
+                                <span
+                                    class="px-2 py-1 rounded text-sm 
+                                {{ $isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+
+                                    {{ $trx->category->name }}
+                                </span>
+                            </td>
+
+                            <!-- AMOUNT -->
+                            <td
+                                class="py-2 font-semibold 
+                            {{ $isIncome ? 'text-green-600' : 'text-red-600' }}">
+
+                                {{ $isIncome ? '+' : '-' }}
+                                Rp {{ number_format($trx->amount, 0, ',', '.') }}
+                            </td>
+
+                            <!-- ACTION -->
+                            <td class="py-2 flex gap-3 text-sm items-center">
+                                
+                                <a href="{{ route('transactions.edit', $trx->id) }}" class="text-blue-500 hover:bg-blue-100 px-2 rounded transition duration-200">
+                                    Edit
+                                </a>
+                                
+                                <form method="POST" action="{{ route('transactions.destroy', $trx->id) }}"
+                                    onsubmit="return confirm('Delete this transaction?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    
+                                    <button class="text-red-500 hover:bg-red-100 px-2 rounded transition duration-200">
+                                        Delete
+                                    </button>
+                                </form>
+                                @if($trx->receipt)
+                                    <button @click="imageUrl = '{{ route('transactions.receipt', $trx->id) }}'; showImageModal = true" class="text-indigo-500 hover:bg-indigo-100 px-2 rounded transition duration-200 flex items-center gap-1">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
                                 @endif
-                            </div>
-                        </td>
-                    </tr>
-                @endempty
-        </tbody>
+                            </td>
 
-    </table>
+                        </tr>
+
+                    @empty
+                        <tr>
+                            <td colspan="6" class="py-10">
+                                <div class="flex flex-col items-center justify-center text-center text-gray-500">
+
+                                    <!-- ICON -->
+                                    <div class="text-4xl mb-2">
+                                        📭
+                                    </div>
+
+                                    @if (request()->hasAny(['search', 'category', 'type', 'wallet', 'date']))
+                                        <!-- FILTER KOSONG -->
+                                        <p class="font-medium">No transactions match your filter</p>
+                                        <p class="text-sm mb-3">Try adjusting your filter settings</p>
+
+                                        <a href="{{ route('transactions.index') }}"
+                                            class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition duration-200">
+                                            Reset Filter
+                                        </a>
+                                    @else
+                                        <!-- DATA BELUM ADA -->
+                                        <p class="font-medium">No transactions yet</p>
+                                        <p class="text-sm mb-3">Start by adding your first transaction 🚀</p>
+
+                                        <div class="flex gap-2">
+                                            <a href="{{ route('transactions.create', ['type' => 'income']) }}"
+                                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
+                                                + Income
+                                            </a>
+
+                                            <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
+                                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
+                                                + Expense
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endempty
+            </tbody>
+
+        </table>
+        </div>
 
     <!-- PAGINATION -->
     <div class="mt-4">

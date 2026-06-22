@@ -15,15 +15,15 @@
         <p class="text-gray-500 text-sm mt-1">Based on your real financial ratios excluding system transactions.</p>
     </div>
     
-    <form method="GET" action="{{ route('financial-health.index') }}" class="flex items-center gap-2">
-        <select name="month" class="border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
+    <form method="GET" action="{{ route('financial-health.index') }}" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto mt-4 md:mt-0">
+        <select name="month" class="w-full sm:w-auto border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
             @for($m = 1; $m <= 12; $m++)
                 <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
                     {{ date('F', mktime(0, 0, 0, $m, 1)) }}
                 </option>
             @endfor
         </select>
-        <select name="year" class="border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
+        <select name="year" class="w-full sm:w-auto border-gray-300 border rounded px-3 py-1.5 focus:outline-none focus:ring focus:border-indigo-300 text-sm">
             @foreach($availableDates as $date)
                 <option value="{{ $date->year }}" {{ $selectedYear == $date->year ? 'selected' : '' }}>
                     {{ $date->year }}
@@ -35,7 +35,7 @@
                 </option>
             @endif
         </select>
-        <button type="submit" class="bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 text-sm transition duration-200">
+        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-3 py-1.5 rounded hover:bg-indigo-700 text-sm transition duration-200">
             View
         </button>
     </form>

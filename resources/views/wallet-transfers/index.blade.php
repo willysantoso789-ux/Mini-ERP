@@ -91,7 +91,7 @@
         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
             <h2 class="text-lg font-bold mb-4 text-gray-800">Transfer History <span class="text-xs font-normal text-gray-400 ml-2">(System Transactions)</span></h2>
             <div class="overflow-x-auto rounded-lg border border-gray-100">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
                             <th class="p-3 text-sm font-bold text-gray-600">Date</th>
