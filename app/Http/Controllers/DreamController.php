@@ -42,6 +42,9 @@ class DreamController extends Controller
         if ($request->amount > $wallet->balance) {
             return back()->withInput()->with('error', 'Insufficient balance in selected wallet');
         }
+        if($request->amount + $dream->transactions->sum('amount') > $dream->target_amount){
+            return back()->withInput()->with('error', 'Transaction exceeds the dream target amount');
+        }
         DB::transaction(function () use ($request, $dream) {
             $category = Category::firstOrCreate(
                 ['name' => 'Dream Saving', 'is_system' => true],
@@ -59,5 +62,12 @@ class DreamController extends Controller
         });
 
         return redirect()->route('dreams.index')->with('success', 'Saving added successfully!');
+    }
+    public function destroy($id)
+    {
+        $dream = Dream::where('user_id', auth()->id())->findOrFail($id);
+        $dream->transactions()->delete();
+        $dream->delete();
+        return redirect()->route('dreams.index')->with('success', 'Dream deleted successfully and wallet balances restored!');
     }
 }

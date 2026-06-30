@@ -6,17 +6,17 @@
     <div class="bg-white rounded-lg shadow p-6" x-data="{ showImageModal: false, imageUrl: '' }">
 
         <!-- HEADER -->
-        <div class="flex justify-between mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-4">
             <h2 class="text-xl font-semibold">Transactions</h2>
 
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-2">
                 <a href="{{ route('transactions.create', ['type' => 'income']) }}"
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200 whitespace-nowrap">
                     + Income
                 </a>
 
                 <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200 whitespace-nowrap">
                     + Expense
                 </a>
             </div>
@@ -217,14 +217,14 @@
                                         <p class="font-medium">No transactions yet</p>
                                         <p class="text-sm mb-3">Start by adding your first transaction 🚀</p>
 
-                                        <div class="flex gap-2">
+                                        <div class="flex flex-wrap justify-center gap-2">
                                             <a href="{{ route('transactions.create', ['type' => 'income']) }}"
-                                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200">
+                                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition hover:scale-[1.02] duration-200 whitespace-nowrap">
                                                 + Income
                                             </a>
 
                                             <a href="{{ route('transactions.create', ['type' => 'expense']) }}"
-                                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200">
+                                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition hover:scale-[1.02] duration-200 whitespace-nowrap">
                                                 + Expense
                                             </a>
                                         </div>

@@ -34,7 +34,12 @@
                         @endif
                     </p>
                 </div>
-                <div class="text-right">
+                <div class="text-right flex flex-col items-end gap-1">
+                    <form action="{{ route('dreams.destroy', $dream->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this dream? This will refund your saved money.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-500 hover:text-red-700 hover:underline font-semibold text-xs transition-colors">Cancel Dream</button>
+                    </form>
                     <span class="text-indigo-600 font-black text-xl">Rp {{ number_format($dream->progress, 2) }}</span>
                 </div>
             </div>

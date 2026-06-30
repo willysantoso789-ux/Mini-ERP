@@ -44,6 +44,7 @@ class ProcessRecurringTransactions extends Command
 
                 // Create the transaction
                 Transaction::create([
+                    'user_id' => $rt->user_id,
                     'wallet_id' => $rt->wallet_id,
                     'category_id' => $rt->category_id,
                     'amount' => $rt->amount,

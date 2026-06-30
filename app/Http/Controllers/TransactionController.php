@@ -51,7 +51,7 @@ class TransactionController extends Controller
             $query->whereDate('transaction_date', '<=', request('end_date'));
         }
 
-        $transactions = $query->latest()->paginate(10);
+        $transactions = $query->orderByDesc('transaction_date')->latest()->paginate(10);
 
         $categories = Category::where('user_id', auth()->id())->get();
         $wallets = Wallet::where('user_id', auth()->id())->get();

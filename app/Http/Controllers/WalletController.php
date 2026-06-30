@@ -105,6 +105,11 @@ class WalletController extends Controller
     public function destroy($id)
     {
         $wallet = Wallet::where('user_id', auth()->id())->findOrFail($id);
+        
+        if ($wallet->transactions()->exists()) {
+            return redirect()->route('wallets.index')->with('error', 'Cannot delete wallet because it has associated transactions.');
+        }
+
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }

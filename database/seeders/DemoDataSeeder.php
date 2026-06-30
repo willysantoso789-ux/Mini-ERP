@@ -201,30 +201,33 @@ class DemoDataSeeder extends Seeder
 
         // 4. Budgets (For the entire year)
         for ($month = 1; $month <= 12; $month++) {
-            $monthStr = '2026-' . str_pad($month, 2, '0', STR_PAD_LEFT);
             Budget::create([
                 'user_id' => $user->id,
                 'category_id' => $foodCat->id,
                 'amount' => 4000000,
-                'month' => $monthStr,
+                'month' => $month,
+                'year' => 2026,
             ]);
             Budget::create([
                 'user_id' => $user->id,
                 'category_id' => $shoppingCat->id,
                 'amount' => 2000000,
-                'month' => $monthStr,
+                'month' => $month,
+                'year' => 2026,
             ]);
             Budget::create([
                 'user_id' => $user->id,
                 'category_id' => $entertainmentCat->id,
                 'amount' => 1500000,
-                'month' => $monthStr,
+                'month' => $month,
+                'year' => 2026,
             ]);
             Budget::create([
                 'user_id' => $user->id,
                 'category_id' => $transportCat->id,
                 'amount' => 1000000,
-                'month' => $monthStr,
+                'month' => $month,
+                'year' => 2026,
             ]);
         }
 
@@ -236,7 +239,7 @@ class DemoDataSeeder extends Seeder
             'amount' => 180000,
             'description' => 'Netflix & Spotify',
             'frequency' => 'monthly',
-            'next_processing_date' => Carbon::create(2026, 7, 5)->format('Y-m-d'),
+            'next_processing_date' => Carbon::create(2026, 7, 2)->format('Y-m-d'),
         ]);
 
         RecurringTransaction::create([

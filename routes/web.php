@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
     Route::resource('wallets', \App\Http\Controllers\WalletController::class);
 
-    Route::resource('dreams', \App\Http\Controllers\DreamController::class)->only(['index', 'store']);
+    Route::resource('dreams', \App\Http\Controllers\DreamController::class)->only(['index', 'store', 'destroy']);
     Route::post('dreams/{dream}/savings', [\App\Http\Controllers\DreamController::class, 'addSaving'])->name('dreams.savings.store');
 
     Route::resource('wallet-transfers', \App\Http\Controllers\WalletTransferController::class)->only(['index', 'store']);
