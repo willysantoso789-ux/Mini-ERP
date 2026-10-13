@@ -9,6 +9,7 @@
 
 **Money Track** is a comprehensive, professional-grade Personal Finance and Mini-ERP system built with Laravel. It helps users manage their personal or small-business finances with robust modules for tracking transactions, analyzing financial health, and setting long-term goals.
 
+---
 
 ## 🌟 Feature List
 
@@ -24,6 +25,7 @@
 * **🏥 Financial Health Score**: Analytical system that calculates the overall financial health based on income, savings, and expense ratios.
 * **💡 Smart Insights**: Contextual financial advice dynamically generated based on current balances and spending behavior.
 
+---
 
 ## 🛠 Technology Stack
 
@@ -33,6 +35,7 @@
 * **Charts:** Chart.js
 * **PDF Generation:** Barryvdh/Laravel-DomPDF 3.x
 
+---
 
 ## 🚀 Installation Guide
 
@@ -67,7 +70,7 @@
 
 
 
-
+---
 
 ## 🗄 Migration Guide
 
@@ -77,6 +80,7 @@ Run the migrations to build the database schema:
 php artisan migrate
 ```
 
+---
 
 ## 🌱 Seeder Guide (Demo Data)
 
@@ -87,6 +91,7 @@ php artisan db:seed --class=DemoDataSeeder
 ```
 *Note: This will create a demo user with the email `demo@example.com` and password `password`. The generated data provides a realistic 12-month (1 year) financial history ensuring meaningful dashboard charts and budget tracking.*
 
+---
 
 ## 🛡 Authentication Overview
 
@@ -97,6 +102,7 @@ where('user_id', auth()->id())
 ```
 This guarantees that users can only ever access, edit, or report on their own financial data.
 
+---
 
 ## 📊 Dashboard Overview
 
@@ -106,6 +112,7 @@ The Dashboard acts as the central hub. It aggregates data from all modules to di
 - Visual pie charts for Expense by Category
 - Quick access to recent transactions
 
+---
 
 ## 📄 Reporting Overview
 
@@ -113,6 +120,7 @@ The Reporting module provides robust data export capabilities strictly scoped to
 - **Filters:** Start Date and End Date.
 - **PDF Export:** Generates a professional, print-ready A4 document containing a summary (Total Income, Expense, Net Balance) and a detailed transaction table. Handles pagination automatically.
 
+---
 
 ## 🔮 Future Improvements
 
@@ -121,6 +129,7 @@ The Reporting module provides robust data export capabilities strictly scoped to
 - [ ] **API Layer:** RESTful API for mobile application integration.
 - [ ] **Collaborative Wallets:** Shared wallets for families or joint accounts (with permission levels).
 
+---
 
 ## 📜 License
 
